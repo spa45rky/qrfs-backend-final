@@ -23,6 +23,7 @@
         "express": "^4.17.3",
         "express-openid-connect": "^2.7.2",
         "mongodb": "^4.5.0",
+        "mongoose": "^6.3.0",
         "nodemon": "^2.0.15"
     }
 }
