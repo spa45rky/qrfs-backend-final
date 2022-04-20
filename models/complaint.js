@@ -28,6 +28,7 @@ const complaintSchema = mongoose.Schema({
     dateResolved: {
         type: Date
     },
+    status: { type: String },
     assignedTo: [{
         ID: { type: String },
         username: { type: String },
