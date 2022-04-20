@@ -6,7 +6,6 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use('/', user_routes);
 
 app.use(
     auth({
@@ -20,12 +19,7 @@ app.use(
     })
 );
 
-app.get('/', (req, res) => {
-    res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
-});
+app.use('/', user_routes);
 
-app.get('/profile', requiresAuth(), (req, res) => {
-    res.send(JSON.stringify(req.oidc.user));
-});
 
 module.exports = app;
