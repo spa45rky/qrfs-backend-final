@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const complaineeSchema = mongoose.Schema({
     complaints: [{
+        type: Object,
         title: String,
         description: String,
         category: String,
@@ -13,6 +14,7 @@ const complaineeSchema = mongoose.Schema({
         }],
     }],
     feedback: [{
+        type: Object,
         complaint_id: String,
         response: String,
     }],
@@ -20,7 +22,9 @@ const complaineeSchema = mongoose.Schema({
     level: { type: Number },
     points: { type: Number },
     inventory: [{
+        type: Object,
         videos: [{
+            type: Object,
             data: Buffer,
             contentType: String
         }]
