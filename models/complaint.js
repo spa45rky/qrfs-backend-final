@@ -5,7 +5,7 @@ const complaintSchema = mongoose.Schema({
         type: String,
         required: [true, "TITLE IS REQUIRED!"],
         min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
-        max: [10, "USERNAME CAN'T EXCEED 10 CHARACTERS!"],
+        max: [10, "TITLE CAN'T EXCEED 10 CHARACTERS!"],
     },
     description: {
         type: String,

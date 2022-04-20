@@ -1,15 +1,41 @@
 const mongoose = require('mongoose');
 
 const customerSchema = mongoose.Schema({
-    name: {
+    title: {
         type: String,
-        // required: [true, "NAME IS REQUIRED!"],
-        // min: [10, "MINIMUM 10 CHARACTERS ARE REQUIRED!"]
+        required: [true, "TITLE IS REQUIRED!"],
+        min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
+        max: [10, "TITLE CAN'T EXCEED 10 CHARACTERS!"],
     },
-    permissions: {
-        type: Array,
-        // required: true
+    subscription_plans: {
+
+    },
+    employees: [{
+        name: String,
+        email: String,
+        role: String,
+        company_id: String,
+        img: {
+            data: Buffer,
+            contentType: String
+        }
+    }],
+    addons: {
+
+    },
+    departments: {
+
+    },
+    analytics: {
+
+    },
+    billing_info: {
+
+    },
+    billing_cycle: {
+
     }
+
 }, { versionKey: false });
 
 module.exports = mongoose.model("Customer", customerSchema);
