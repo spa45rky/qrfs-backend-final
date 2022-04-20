@@ -1,33 +1,39 @@
 const mongoose = require('mongoose');
 
 const complaintSchema = mongoose.Schema({
-    complainee: {
-        type: Object,
-        name: {
-            type: String,
-        },
-        id: {
-            type: String,
-        }
+    title: {
+        type: String,
+        required: [true, "TITLE IS REQUIRED!"],
+        min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
+        max: [10, "USERNAME CAN'T EXCEED 10 CHARACTERS!"],
     },
-    assignedTo: {
-        type: Object,
-        name: {
-            type: String,
-        },
-        id: {
-            type: String,
-        }
-    },
-    details: {
-        type: String
+    description: {
+        type: String,
+        required: true
     },
     category: {
-        type: String
+        type: String,
+        required: true
     },
-    status: {
-        type: String
+    media: {
+        data: Buffer,
+        contentType: String
     },
+    dateCreated: {
+        type: Date
+    },
+    dateUpdated: {
+        type: Date
+    },
+    dateResolved: {
+        type: Date
+    },
+    assignedTo: [{
+        ID: { type: String },
+        username: { type: String },
+        email: { type: String },
+    }],
+
 }, { versionKey: false });
 
 module.exports = mongoose.model("Complaint", complaintSchema);
