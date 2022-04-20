@@ -7,6 +7,10 @@ const complaintSchema = mongoose.Schema({
         min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
         max: [10, "TITLE CAN'T EXCEED 10 CHARACTERS!"],
     },
+    complainee: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Complainee"
+    },
     description: {
         type: String,
         required: true
@@ -34,6 +38,11 @@ const complaintSchema = mongoose.Schema({
         username: { type: String },
         email: { type: String },
     }],
+    geolocation: {
+        latitude: { type: Number },
+        longitude: { type: Number }
+    },
+    location: { type: String }
 
 }, { versionKey: false });
 

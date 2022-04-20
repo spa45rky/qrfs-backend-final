@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const superAdminSchema = mongoose.Schema({
     username: {
         type: String,
-        required: [true, "TITLE IS REQUIRED!"],
+        required: [true, "USERNAME IS REQUIRED!"],
         min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
-        max: [10, "TITLE CAN'T EXCEED 10 CHARACTERS!"],
+        max: [10, "USERNAME CAN'T EXCEED 10 CHARACTERS!"],
+        lowercase: true,
+        match: /^[a-zA-Z0-9]+$/
     },
     email: {
         type: String,

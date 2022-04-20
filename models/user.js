@@ -25,14 +25,16 @@ const userSchema = mongoose.Schema({
         match: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,20}$/
     },
     sign_type: {
-
+        type: String,
     },
     role: {
         type: String,
+        required: [true, "USER ROLE IS REQUIRED!"],
         max: [10, "MAXIMUM 10 CHARACTERS ARE REQUIRED!"]
     },
     company_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Customer"
     },
     img: {
         data: Buffer,
