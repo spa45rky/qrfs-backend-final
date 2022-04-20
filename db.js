@@ -10,7 +10,7 @@ const connect_db = async() => {
     const db = client.db("QRFS"); // will return a db object
     module.exports = db;
 
-    // after establishing connection to the database, we'll start our app
+    // starting the app right after the successful connection to the databse
     const app = require('./app');
 
     app.listen((process.env.PORT), () => {
