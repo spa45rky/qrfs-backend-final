@@ -37,7 +37,8 @@ const userSchema = mongoose.Schema({
     img: {
         data: Buffer,
         contentType: String
-    }
+    },
+
 }, { versionKey: false });
 
 module.exports = mongoose.model("User", userSchema);
