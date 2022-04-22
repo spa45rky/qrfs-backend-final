@@ -5,6 +5,8 @@ const userController = require('../controllers/userController');
 
 // USER GET ROUTES
 user_router.get('/', userController.login);
+user_router.post('/register', userController.register);
+user_router.get('/logout', userController.logout);
 user_router.get('/profile', userController.profile);
 
 
