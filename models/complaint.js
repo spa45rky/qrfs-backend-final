@@ -3,13 +3,13 @@ const mongoose = require('mongoose');
 const complaintSchema = mongoose.Schema({
     title: {
         type: String,
-        required: [true, "TITLE IS REQUIRED!"],
+        // required: [true, "TITLE IS REQUIRED!"],
         min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
         max: [10, "TITLE CAN'T EXCEED 10 CHARACTERS!"],
     },
     complainee: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Complainee"
+        ref: 'Complainee'
     },
     description: {
         type: String,
@@ -38,10 +38,10 @@ const complaintSchema = mongoose.Schema({
         username: { type: String },
         email: { type: String },
     }],
-    geolocation: {
+    geolocation: [{
         latitude: { type: Number },
         longitude: { type: Number }
-    },
+    }],
     location: { type: String }
 
 }, { versionKey: false });

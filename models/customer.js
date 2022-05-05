@@ -3,23 +3,22 @@ const mongoose = require('mongoose');
 const customerSchema = mongoose.Schema({
     username: {
         type: String,
-        required: [true, "USERNAME IS REQUIRED!"],
+        // required: [true, "USERNAME IS REQUIRED!"],
         min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
         max: [10, "USERNAME CAN'T EXCEED 10 CHARACTERS!"],
-        lowercase: true,
-        match: /^[a-zA-Z0-9]+$/
-
+        // lowercase: true,
+        // match: /^[a-zA-Z0-9]+$/
     },
     email: {
         type: String,
-        index: false,
-        required: [true, "EMAIL IS REQUIRED!"],
-        unique: true,
-        match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        // index: false,
+        // unique: true,
+        // required: [true, "EMAIL IS REQUIRED!"],
+        // match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     },
     title: {
         type: String,
-        required: [true, "TITLE IS REQUIRED!"],
+        // required: [true, "TITLE IS REQUIRED!"],
         min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
         max: [10, "TITLE CAN'T EXCEED 10 CHARACTERS!"],
     },
@@ -46,9 +45,6 @@ const customerSchema = mongoose.Schema({
 
     },
     billing_info: {
-
-    },
-    billing_cycle: {
 
     }
 

@@ -1,15 +1,20 @@
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const URL = process.env.URL;
 const PORT = process.env.PORT || 3000;
 
-const client = new MongoClient(URL);
+// const client = new MongoClient(URL);
 
 const connect_db = async() => {
-    await client.connect();
-    const db = client.db("QRFS"); // will return a db object
-    module.exports = db;
+    try {
+        await mongoose.connect(URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+    } catch (error) {
+        console.log("DB-ERROR: " + error);
+    }
 
     // starting the app right after the successful connection to the databse
     const app = require('./app');
