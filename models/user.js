@@ -16,8 +16,8 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         // required: [true, "PASSWORD IS REQUIRED!"],
-        min: [12, "MINIMUM 12 CHARACTERS ARE REQUIRED!"],
-        max: [20, "PASSWORD CAN'T EXCEED 20 CHARACTERS!"],
+        // min: [12, "MINIMUM 12 CHARACTERS ARE REQUIRED!"],
+        // max: [20, "PASSWORD CAN'T EXCEED 20 CHARACTERS!"],
     },
     sign_type: {
         type: String,

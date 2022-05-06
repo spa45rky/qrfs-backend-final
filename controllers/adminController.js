@@ -27,7 +27,7 @@ exports.getUsersList = async(req, res) => {
 
 exports.addSpecificUser = async(req, res) => {
     try {
-        // console.log(req.body);
+        console.log(req.body);
         const full_name = req.body.name;
         const email = req.body.email;
         await User.findOne({ name: full_name, email: email }, (err, user) => {
@@ -37,6 +37,7 @@ exports.addSpecificUser = async(req, res) => {
                 User.create({
                     name: req.body.name,
                     email: req.body.email,
+                    password: req.body.password,
                     role: "user"
                 }, (err, user) => {
                     if (err) {
