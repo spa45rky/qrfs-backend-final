@@ -15,6 +15,7 @@ app.use(express.json());
 
 app.use('/', auth_routes);
 app.use('/admin', passport.authenticate('jwt', { session: false }), admin_routes);
+// app.use('/admin', admin_routes);
 app.use('/user', user_routes);
 app.use('/serviceprovider', service_provider_routes);
 

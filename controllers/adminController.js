@@ -255,21 +255,11 @@ exports.updateSpecificDept = async(req, res) => {
     try {
         const id = req.params.id;
         const dept_title = req.body.title;
-        await Department.findOne({ _id: id }).then((err, dept) => {
-                if (err) res.send("NOT ABLE TO UPDATE THE DEPT!");
-                else if (dept == null) res.send("DEPT NOT FOUND!");
-                else {
-                    Department.updateOne({ _id: dept._id }, { title: dept_title, }).then((err, res) => {
-                        if (err) res.send("NOT ABLE TO UPDATE THE DEPT!");
-                        else res.send("DEPT IS SUCCESSFULLY UPDATED!");
-                    });
-                }
-            })
-            // await Department.findByIdAndUpdate(id, { title: dept_title }, (err, dept) => {
-            //     if (err) res.send("NOT ABLE TO UPDATE THE DEPT!");
-            //     else if (dept == null) res.send("DEPT NOT FOUND!");
-            //     else res.send("DEPT IS SUCCESSFULLY UPDATED!");
-            // });
+        await Department.findByIdAndUpdate(id, { title: dept_title }, (err, dept) => {
+            if (err) res.send("NOT ABLE TO UPDATE THE DEPT!");
+            else if (dept == null) res.send("DEPT NOT FOUND!");
+            else res.send("DEPT IS SUCCESSFULLY UPDATED!");
+        });
     } catch (err) {
         console.log(err);
     }
