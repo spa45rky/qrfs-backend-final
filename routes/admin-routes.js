@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const admin_router = express.Router();
 const adminController = require('../controllers/adminController');
 
