@@ -6,12 +6,12 @@ exports.register = function(req, res) {
 
 }
 
-exports.login = async (req, res) => {
+exports.login = async(req, res) => {
     try {
-        User.findOne({email: req.body.email}, (err, user) => {
+        User.findOne({ email: req.body.email }, (err, user) => {
             if (user) {
                 let successObject = {
-                    token: jwt.sign({_id: user._id}, process.env.JWTSECRET, {expiresIn: '3m'}),
+                    token: jwt.sign({ _id: user._id }, process.env.JWTSECRET, { expiresIn: '3m' }),
                     user
                 }
                 res.json(successObject)
