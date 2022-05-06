@@ -19,6 +19,9 @@ const complaintSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    workUpdate: {
+        type: String
+    },
     media: {
         data: Buffer,
         contentType: String

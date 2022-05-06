@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const service_providers_schema = mongoose.Schema({
     assignedComplaints: [{
+        c_id: mongoose.Schema.Types.ObjectId,
         type: Object,
         title: String,
         description: String,
