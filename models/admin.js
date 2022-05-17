@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 const adminSchema = mongoose.Schema({
-    name: {
-        type: String,
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     }
 }, { versionKey: false });
 

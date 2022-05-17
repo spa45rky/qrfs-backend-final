@@ -10,12 +10,12 @@ const userSchema = mongoose.Schema({
     email: {
         type: String,
         // index: false,
-        // required: [true, "EMAIL IS REQUIRED!"],
-        // unique: true,
+        required: [true, "EMAIL IS REQUIRED!"],
+        unique: true,
     },
     password: {
         type: String,
-        // required: [true, "PASSWORD IS REQUIRED!"],
+        required: [true, "PASSWORD IS REQUIRED!"],
         // min: [12, "MINIMUM 12 CHARACTERS ARE REQUIRED!"],
         // max: [20, "PASSWORD CAN'T EXCEED 20 CHARACTERS!"],
     },
@@ -24,14 +24,15 @@ const userSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        // required: [true, "USER ROLE IS REQUIRED!"],
-        max: [10, "MAXIMUM 10 CHARACTERS ARE REQUIRED!"]
+        required: [true, "USER ROLE IS REQUIRED!"],
+        enum: ['SUPERADMIN', 'ADMIN', 'COMPLAINEE', 'SERVICEPROVIDER'],
     },
     company_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Customer"
+        ref: "Customer",
+        required: true
     },
-    img: {
+    pfp: {
         data: Buffer,
         contentType: String
     },

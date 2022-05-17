@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const Role = require('../models/role');
 const Complaint = require('../models/complaint');
 const Department = require('../models/department');
 
@@ -37,7 +36,7 @@ exports.addSpecificUser = async(req, res) => {
                     name: req.body.name,
                     email: req.body.email,
                     password: req.body.password,
-                    role: "user"
+                    role: "COMPLAINEE"
                 }, (err, user) => {
                     if (err) {
                         console.log("\n\n" + err);
@@ -57,8 +56,7 @@ exports.updateSpecificUser = async(req, res) => {
         const id = req.params.id;
         const full_name = req.body.name;
         const email = req.body.email;
-        const role = req.body.role;
-        await User.findByIdAndUpdate(id, { name: full_name, email: email, role: role }, (err, user) => {
+        await User.findByIdAndUpdate(id, { name: full_name, email: email }, (err, user) => {
             if (err) res.send("NOT ABLE TO UPDATE THE USER!");
             else res.send("USER IS SUCCESSFULLY UPDATED!");
         });
@@ -93,18 +91,18 @@ exports.deleteMultipleUsers = (req, res) => {
     }
 }
 
-exports.getRolesList = async(req, res) => {
-    try {
-        await Role.find({}, (err, roles) => {
-            if (err) res.send("OOPS... NO DATA IN THE DATABASE!");
-            else {
-                res.send(roles);
-            }
-        });
-    } catch (err) {
-        console.log(err);
-    }
-}
+// exports.getRolesList = async(req, res) => {
+//     try {
+//         await Role.find({}, (err, roles) => {
+//             if (err) res.send("OOPS... NO DATA IN THE DATABASE!");
+//             else {
+//                 res.send(roles);
+//             }
+//         });
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
 
 // exports.getSpecificRole = async(req, res) => {
 //     const _id = req.query.id;
@@ -114,31 +112,31 @@ exports.getRolesList = async(req, res) => {
 //     });
 // }
 
-exports.updateSpecificRole = async(req, res) => {
-    const id = req.params.id;
-    await Role.findByIdAndUpdate(id, {}, (err, role) => {
-        if (role) res.send("NOT ABLE TO UPDATE THE ROLE!");
-        else res.send("ROLE IS SUCCESSFULLY UPDATED!");
-    });
-}
+// exports.updateSpecificRole = async(req, res) => {
+//     const id = req.params.id;
+//     await Role.findByIdAndUpdate(id, {}, (err, role) => {
+//         if (role) res.send("NOT ABLE TO UPDATE THE ROLE!");
+//         else res.send("ROLE IS SUCCESSFULLY UPDATED!");
+//     });
+// }
 
-exports.deleteSpecificRole = async(req, res) => {
-    const role_id = req.params.id;
-    await Role.findByIdAndDelete(role_id, (err, role) => {
-        if (err) res.send("NOT ABLE TO DELETE THE ROLE!");
-        else res.send("ROLE IS SUCCESSFULLY DELETED!");
-    });
-}
+// exports.deleteSpecificRole = async(req, res) => {
+//     const role_id = req.params.id;
+//     await Role.findByIdAndDelete(role_id, (err, role) => {
+//         if (err) res.send("NOT ABLE TO DELETE THE ROLE!");
+//         else res.send("ROLE IS SUCCESSFULLY DELETED!");
+//     });
+// }
 
-exports.deleteMultipleRole = (req, res) => {
-    const role_ids = req.body.ids;
-    role_ids.forEach(id => {
-        Role.findByIdAndDelete(id, (err, role) => {
-            if (err) res.send("NOT ABLE TO DELETE THE ROLE WITH ID: " + id);
-        });
-        res.send("SUCCESSFULLY DELETED ALL THE MENTIONED ROLES!");
-    });
-}
+// exports.deleteMultipleRole = (req, res) => {
+//     const role_ids = req.body.ids;
+//     role_ids.forEach(id => {
+//         Role.findByIdAndDelete(id, (err, role) => {
+//             if (err) res.send("NOT ABLE TO DELETE THE ROLE WITH ID: " + id);
+//         });
+//         res.send("SUCCESSFULLY DELETED ALL THE MENTIONED ROLES!");
+//     });
+// }
 
 exports.getComplaintsList = async(req, res) => {
     try {

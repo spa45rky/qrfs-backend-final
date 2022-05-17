@@ -5,8 +5,9 @@ const addonSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    sth: {
-        type: String
+    title: {
+        type: String,
+        required: true
     }
 
 }, { versionKey: false })

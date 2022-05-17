@@ -1,51 +1,38 @@
 const mongoose = require('mongoose');
 
 const customerSchema = mongoose.Schema({
-    username: {
-        type: String,
-        // required: [true, "USERNAME IS REQUIRED!"],
-        min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
-        max: [10, "USERNAME CAN'T EXCEED 10 CHARACTERS!"],
-        // lowercase: true,
-        // match: /^[a-zA-Z0-9]+$/
-    },
     email: {
         type: String,
         // index: false,
-        // unique: true,
-        // required: [true, "EMAIL IS REQUIRED!"],
-        // match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        unique: true,
+        required: [true, "EMAIL IS REQUIRED!"],
+        match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     },
     title: {
         type: String,
-        // required: [true, "TITLE IS REQUIRED!"],
-        min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
-        max: [10, "TITLE CAN'T EXCEED 10 CHARACTERS!"],
+        required: [true, "TITLE IS REQUIRED!"],
     },
-    subscription_plans: {
-        type: String
+    subscription_plan: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Subscription"
     },
     employees: [{
-        name: String,
-        email: String,
-        role: String,
-        company_id: String,
-        img: {
-            data: Buffer,
-            contentType: String
-        }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     }],
     addons: {
-
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Addon"
     },
     departments: {
-
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Department"
     },
-    analytics: {
-
-    },
+    // analytics: {},
     billing_info: {
-
+        type: Object,
+        required: true,
+        payment_method: {type: String},
     }
 
 }, { versionKey: false });

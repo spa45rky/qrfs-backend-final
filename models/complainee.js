@@ -1,24 +1,10 @@
 const mongoose = require('mongoose');
 
 const complaineeSchema = mongoose.Schema({
-    username: {
-        type: String,
-        // required: [true, "USERNAME IS REQUIRED!"],
-        min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
-        max: [10, "USERNAME CAN'T EXCEED 10 CHARACTERS!"],
-    },
-    email: {
-        type: String,
-        // index: false,
-        required: [true, "EMAIL IS REQUIRED!"],
-        // unique: true,
-    },
-    password: {
-        type: String,
-        // required: [true, "PASSWORD IS REQUIRED!"],
-        min: [12, "MINIMUM 12 CHARACTERS ARE REQUIRED!"],
-        max: [20, "PASSWORD CAN'T EXCEED 20 CHARACTERS!"],
-    },
+    user_id: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+     },
     complaints: [{
         type: Object,
         title: String,

@@ -1,30 +1,54 @@
 const mongoose = require('mongoose');
 
 const service_providers_schema = mongoose.Schema({
+    user_id: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+     },
     assignedComplaints: [{
+<<<<<<< HEAD
         c_id: mongoose.Schema.Types.ObjectId,
         type: Object,
         title: String,
         description: String,
         category: String,
         status: String,
+=======
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Complaint"
+>>>>>>> authentication
     }],
     feedbackGiven: [{
         type: Object,
-        complaint_id: String,
+        complaint_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Complaint"
+        },
         response: String,
     }],
-    rating: { type: Number },
+    department: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Department"
+    },
+    ratings: [{ 
+        type: Object,
+        complaint_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Complaint"
+        },
+        complainee_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Complainee"
+        }
+    }],
+    averageRating: {
+        type: Number,
+    },
     level: { type: Number },
     points: { type: Number },
-    inventory: [{
-        type: Object,
-        videos: [{
-            type: Object,
-            data: Buffer,
-            contentType: String
-        }]
-    }]
+    // inventory: [{
+    //     type: Object,
+    // }]
 
 }, { versionKey: false });
 
