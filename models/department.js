@@ -15,8 +15,11 @@ const deptSchema = mongoose.Schema({
     company_id: {
         type: String,
         // required: true 
-    }
-
+    },
+    employees: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "ServiceProvider"
+    }]
 }, { versionKey: false });
 
 module.exports = mongoose.model("Department", deptSchema);

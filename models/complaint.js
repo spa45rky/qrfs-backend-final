@@ -34,15 +34,18 @@ const complaintSchema = mongoose.Schema({
     },
     status: { type: String },
     assignedTo: [{
-        ID: { type: String },
-        username: { type: String },
-        email: { type: String },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ServiceProvider'
     }],
-    geolocation: [{
+    geolocation: {
         latitude: { type: Number },
         longitude: { type: Number }
-    }],
-    location: { type: String }
+    },
+    rating: {
+        type: Number,
+    }
+
+
 
 }, { versionKey: false });
 

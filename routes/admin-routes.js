@@ -12,11 +12,11 @@ admin_router.delete('/users/delete/:id', adminController.deleteSpecificUser);
 admin_router.delete('/users/deleteMultiple', adminController.deleteMultipleUsers);
 
 // ADMIN ROLES ROUTES
-admin_router.get('/roles', adminController.getRolesList);
-// admin_router.get('/role/:id', adminController.getSpecificRole);
-admin_router.put('/role/update/:id', adminController.updateSpecificRole);
-admin_router.delete('/role/delete/:id', adminController.deleteSpecificRole);
-admin_router.delete('/role/delete/miultiple', adminController.deleteMultipleRole);
+// admin_router.get('/roles', adminController.getRolesList);
+// // admin_router.get('/role/:id', adminController.getSpecificRole);
+// admin_router.put('/role/update/:id', adminController.updateSpecificRole);
+// admin_router.delete('/role/delete/:id', adminController.deleteSpecificRole);
+// admin_router.delete('/role/delete/miultiple', adminController.deleteMultipleRole);
 
 // ADMIN COMPLAINT ROUTES
 admin_router.get('/complaints', adminController.getComplaintsList);
