@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors')
 const auth_routes = require('./routes/auth-routes');
 const admin_routes = require('./routes/admin-routes');
 const user_routes = require('./routes/user-routes');
@@ -12,6 +13,7 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors())
 
 app.use('/', auth_routes);
 app.use('/admin', passport.authenticate('jwt', { session: false }), admin_routes);

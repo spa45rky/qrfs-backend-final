@@ -28,11 +28,11 @@ exports.addSpecificUser = async(req, res) => {
         // console.log(req.body);
         const full_name = req.body.name;
         const email = req.body.email;
-        await User.findOne({ name: full_name, email: email }, (err, user) => {
+        await User.findOne({ name: full_name, email: email }, async (err, user) => {
             if (err) console.log(err);
             else if (user) res.send("USER ALREADY EXISTS!");
             else {
-                User.create({
+                 await User.create({
                     name: req.body.name,
                     email: req.body.email,
                     password: req.body.password,
@@ -45,7 +45,7 @@ exports.addSpecificUser = async(req, res) => {
                     res.send("USER IS SUCCESSFULLY ADDED!");
                 });
             }
-        });
+        }).clone();
     } catch (err) {
         console.log(err);
     }
