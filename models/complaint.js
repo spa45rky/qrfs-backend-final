@@ -48,8 +48,6 @@ const complaintSchema = mongoose.Schema({
         type: Number,
     }
 
-
-
 }, { versionKey: false });
 
 module.exports = mongoose.model("Complaint", complaintSchema);

@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const service_providers_schema = mongoose.Schema({
-    user_id: { 
+    user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-     },
+    },
     assignedComplaints: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Complaint"
@@ -21,7 +21,7 @@ const service_providers_schema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Department"
     },
-    ratings: [{ 
+    ratings: [{
         type: Object,
         complaint_id: {
             type: mongoose.Schema.Types.ObjectId,

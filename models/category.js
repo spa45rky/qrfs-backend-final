@@ -14,7 +14,6 @@ const category_schema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Department"
     }
-
-})
+}, { versionKey: false });
 
 module.exports = mongoose.model("Category", category_schema);
