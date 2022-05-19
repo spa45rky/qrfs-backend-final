@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 exports.register = async (req, res) => {
     try {
         // console.log(req.body);
+        let salt = bcrypt.genSaltSync(10)
         const email = req.body.email;
         await User.findOne({ email: email }, async (err, user) => {
             if (err) console.log(err);
@@ -13,7 +15,8 @@ exports.register = async (req, res) => {
                  await User.create({
                     name: req.body.firstName + ' ' + req.body.lastName,
                     email: req.body.email,
-                    password: req.body.password,
+                    // hashing password
+                    password: bcrypt.hashSync(req.body.password, salt),
                     role: "COMPLAINEE",
                     sign_type: req.body.sign_type
                 }, (err, user) => {
@@ -36,9 +39,11 @@ exports.register = async (req, res) => {
 }
 
 exports.login = async(req, res) => {
+
+
     try {
         User.findOne({ email: req.body.email }, (err, user) => {
-            if (user) {
+            if (user && bcrypt.compareSync(req.body.password, user.password)) {
                 let successObject = {
                     token: jwt.sign({ _id: user._id }, process.env.JWTSECRET, { expiresIn: '3m' }),
                     user
@@ -54,9 +59,6 @@ exports.login = async(req, res) => {
     }
 }
 
-exports.logout = function(req, res) {
-
-}
 
 // exports.profile = (requiresAuth(), (req, res) => {
 //     res.send(req.oidc.isAuthenticated() ? JSON.stringify(req.oidc.user) : "Logged out!");
