@@ -20,19 +20,19 @@ const customerSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     }],
-    addons: {
+    addons: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Addon"
-    },
-    departments: {
+    }],
+    departments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Department"
-    },
+    }],
     // analytics: {},
     billing_info: {
         type: Object,
         required: true,
-        payment_method: {type: String},
+        payment_method: { type: String },
     }
 
 }, { versionKey: false });

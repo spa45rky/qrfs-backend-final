@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const complaineeSchema = mongoose.Schema({
-    user_id: { 
+    user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-     },
+    },
     complaints: [{
         type: Object,
         title: String,
@@ -25,14 +25,6 @@ const complaineeSchema = mongoose.Schema({
     rating: { type: Number },
     level: { type: Number },
     points: { type: Number },
-    inventory: [{
-        type: Object,
-        videos: [{
-            type: Object,
-            data: Buffer,
-            contentType: String
-        }]
-    }]
 
 }, { versionKey: false });
 

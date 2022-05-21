@@ -7,7 +7,8 @@ const auth = require('./middlewares/auth');
 const passport = require('passport');
 
 const app = express();
-
+// const http = require('http').createServer(app);
+// const io = require('socket.io')(http);
 
 
 app.use(express.urlencoded({ extended: true }));
