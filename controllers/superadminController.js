@@ -23,7 +23,7 @@ exports.addCustomer = (req, res) => {
                             if (err) res.send("NOT ABLE TO ADD THE ADMIN IN USER'S TABLE!");
                             else if (user != null) res.send("ADMIN ALREADY EXISTS IN THE USER'S TABLE!");
                             else {
-                                Customer.findOneAndUpdate({ email: req.body.email }, { employees: { $push: { email: req.body.adminEmail } } }).exec((err, customer) => {
+                                Customer.updateOne({ email: req.body.email }, { employees: { $push: req.body.adminEmail } }).exec((err, customer) => {
                                     if (err) res.send("NOT ABLE TO ADD THE ADMIN IN CUSTOMER'S TABLE");
                                     else {
                                         User.create({

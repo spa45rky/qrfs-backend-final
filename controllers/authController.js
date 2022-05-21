@@ -3,16 +3,16 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-exports.register = async (req, res) => {
+exports.register = async(req, res) => {
     try {
         // console.log(req.body);
         let salt = bcrypt.genSaltSync(10)
         const email = req.body.email;
-        await User.findOne({ email: email }, async (err, user) => {
+        await User.findOne({ email: email }, async(err, user) => {
             if (err) console.log(err);
             else if (user) res.send("USER ALREADY EXISTS!");
             else {
-                 await User.create({
+                await User.create({
                     name: req.body.firstName + ' ' + req.body.lastName,
                     email: req.body.email,
                     // hashing password
@@ -45,7 +45,7 @@ exports.login = async(req, res) => {
         User.findOne({ email: req.body.email }, (err, user) => {
             if (user && bcrypt.compareSync(req.body.password, user.password)) {
                 let successObject = {
-                    token: jwt.sign({ _id: user._id }, process.env.JWTSECRET, { expiresIn: '3m' }),
+                    token: jwt.sign({ _id: user._id }, process.env.JWTSECRET, { expiresIn: '60m' }),
                     user
                 }
                 res.json(successObject)

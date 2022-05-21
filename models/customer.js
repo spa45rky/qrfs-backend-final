@@ -17,7 +17,9 @@ const customerSchema = mongoose.Schema({
         ref: "Subscription"
     },
     employees: [{
-        email: String
+        email: {
+            type: String
+        }
     }],
     addons: [{
         type: mongoose.Schema.Types.ObjectId,
