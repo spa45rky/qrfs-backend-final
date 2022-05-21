@@ -57,7 +57,7 @@ exports.addCustomer = (req, res) => {
     }
 }
 
-exports.editCustomer = async(req, res) => {
+exports.editCustomer = (req, res) => {
     try {
         const filter = { _id: req.params.id };
         const updated_custmer_obj = {
@@ -67,7 +67,14 @@ exports.editCustomer = async(req, res) => {
             addons: req.body.addons,
             departments: req.body.departments
         };
-        await Customer.findOneAndUpdate(filter, updated_custmer_obj).exec((err, customer) => {
+        // const updated_custmer_obj = {
+        //     title: (req.body.title == null) ? req.body.title : customer.title,
+        //     email: (req.body.email == null) ? req.body.email : customer.email,
+        //     employees: (req.body.employees == null) ? req.body.employees : customer.employees,
+        //     addons: (req.body.addons == null) ? req.body.addons : customer.addons,
+        //     departments: (req.body.departments == null) ? req.body.departments : customer.departments
+        // };
+        Customer.findOneAndUpdate(filter, updated_custmer_obj).exec((err, customer) => {
             if (err) res.send("NOT ABLE TO UPDATE THE CUSTOMER!");
             else if (customer == null) res.send("CUSTOMER DOES NOT EXIST!");
             else res.send("CUSTOMER IS SUCCESSFULLY UPDATED!");
