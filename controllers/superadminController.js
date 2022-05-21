@@ -48,8 +48,8 @@ exports.addCustomer = (req, res) => {
                                 });
                             }
                         });
-                    })
-                })
+                    });
+                });
             }
         });
     } catch (error) {
@@ -57,8 +57,24 @@ exports.addCustomer = (req, res) => {
     }
 }
 
-exports.editCustomer = (req, res) => {
-
+exports.editCustomer = async(req, res) => {
+    try {
+        const filter = { _id: req.params.id };
+        const updated_custmer_obj = {
+            title: req.body.title,
+            email: req.body.email,
+            employees: req.body.employees,
+            addons: req.body.addons,
+            departments: req.body.departments
+        };
+        await Customer.findOneAndUpdate(filter, updated_custmer_obj).exec((err, customer) => {
+            if (err) res.send("NOT ABLE TO UPDATE THE CUSTOMER!");
+            else if (customer == null) res.send("CUSTOMER DOES NOT EXIST!");
+            else res.send("CUSTOMER IS SUCCESSFULLY UPDATED!");
+        });
+    } catch (error) {
+        console.log("NOT ABLE TO UPDATE THE CUSTOMER! " + error);
+    }
 }
 
 exports.deleteCustomer = async(req, res) => {
