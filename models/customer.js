@@ -33,6 +33,8 @@ const customerSchema = mongoose.Schema({
         type: Object,
         required: true,
         payment_method: { type: String },
+        // required: true,
+        payment_method: { type: String },
     }
 
 }, { versionKey: false });
