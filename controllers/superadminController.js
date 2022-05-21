@@ -16,7 +16,7 @@ exports.addCustomer = (req, res) => {
                 Customer.create({
                     title: req.body.title,
                     email: req.body.email,
-                    $push: { employees: [req.body.adminEmail] }
+                    employees: { $push: { email: req.body.adminEmail } }
                 }, (err, customer) => {
                     if (err) {
                         console.log("\n\n" + err);
