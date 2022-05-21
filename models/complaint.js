@@ -49,10 +49,10 @@ const complaintSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ServiceProvider'
     }],
-    geolocation: {
-        latitude: { type: Number },
-        longitude: { type: Number }
-    },
+    // geolocation: {
+    //     latitude: { type: Number },
+    //     longitude: { type: Number }
+    // },
     rating: {
         type: Number,
     }
