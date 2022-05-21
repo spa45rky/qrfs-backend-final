@@ -31,7 +31,7 @@ const customerSchema = mongoose.Schema({
     // analytics: {},
     billing_info: {
         type: Object,
-        required: true,
+        // required: true,
         payment_method: {type: String},
     }
 
