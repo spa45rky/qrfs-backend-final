@@ -2,22 +2,24 @@ const Customer = require('../models/customer');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 
-exports.addCustomer = async(req, res) => {
+exports.addCustomer = (req, res) => {
     try {
         let salt = bcrypt.genSaltSync(10);
-        await Customer.findOne({ email: req.body.email }, async(err, customer) => {
-            if (err) console.log(err);
-            else if (customer) res.send('CUSTOMER ALREADY EXISTS!');
+        Customer.findOne({ email: req.body.email }).exec((err, customer) => {
+            if (err) {
+                console.log(err);
+            } else if (customer) res.send('CUSTOMER ALREADY EXISTS!');
             else {
-                await Customer.create({
+                Customer.create({
                     title: req.body.title,
                     email: req.body.email,
-                }, async(err, customer) => {
+                    $push: { employees: [req.body.adminEmail] }
+                }, (err, customer) => {
                     if (err) {
                         console.log("\n\n" + err);
-                        res.send("UNABLE TO ADD CUSTOMER!");
+                        res.send(err)
                     }
-                    await User.create({
+                    User.create({
                         name: 'UNDEFINED',
                         email: req.body.adminEmail,
                         password: bcrypt.hashSync('admin', salt),
@@ -26,12 +28,42 @@ exports.addCustomer = async(req, res) => {
                         company_id: customer._id
                     }, (err, user) => {
                         if (err) res.send('CUSTOMER CREATED BUT ADMIN ACCOUNT NOT CREATED!')
-                        res.json(customer)
+                        customer.employees
+                        User.findOne({ email: req.body.adminEmail }).exec((err, admin) => {
+                            if (err) res.send('NOT ABLE TO ADD ADMIN!');
+                            else {
+                                User.create({
+                                    name: 'UNDEFINED',
+                                    email: req.body.adminEmail,
+                                    password: bcrypt.hashSync('admin', salt),
+                                    role: 'ADMIN',
+                                    sign_type: 'PLATFORM',
+                                    company_id: customer._id
+                                }, (err, user) => {
+                                    if (err) res.send("NOT ABLE TO ADD ADMIN IN THE USERS COLLECTION!");
+                                    else res.send("ADMIN IS SUCCESSFULLY ADDED!");
+                                });
+                            }
+                        });
                     })
                 })
             }
-        })
+        });
     } catch (error) {
-        res.send(error)
+        console.log(error);
+    }
+}
+
+exports.editCustomer = (req, res) => {}
+
+exports.deleteCustomer = async(req, res) => {
+    try {
+        await Customer.findByIdAndDelete({ _id: req.params.id }, (err, customer) => {
+            if (err) res.send(err);
+            else if (customer) res.send("CUSTOMER DOES NOT EXIST!");
+            else res.send("CUSTOMER IS SUCCESSFULLY DELETED!");
+        });
+    } catch (err) {
+        console.log("NOT ABLE TO DELETE THE CUSTOMER! " + err);
     }
 }
