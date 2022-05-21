@@ -9,46 +9,39 @@ exports.addCustomer = (req, res) => {
     try {
         let salt = bcrypt.genSaltSync(10);
         Customer.findOne({ email: req.body.email }).exec((err, customer) => {
-            if (err) {
-                console.log(err);
-            } else if (customer) res.send('CUSTOMER ALREADY EXISTS!');
+            if (err) console.log("NOT ABLE TO FIND THE CUSTOMER! " + err);
+            else if (customer) res.send('CUSTOMER ALREADY EXISTS!');
             else {
                 Customer.create({
                     title: req.body.title,
                     email: req.body.email,
-                    employees: { $push: { email: req.body.adminEmail } }
+                    // employees: { $push: { email: req.body.adminEmail } }
                 }, (err, customer) => {
-                    if (err) {
-                        console.log("\n\n" + err);
-                        res.send(err)
-                    }
-                    User.create({
-                        name: 'UNDEFINED',
-                        email: req.body.adminEmail,
-                        password: bcrypt.hashSync('admin', salt),
-                        role: 'ADMIN',
-                        sign_type: 'PLATFORM',
-                        company_id: customer._id
-                    }, (err, user) => {
-                        if (err) res.send('CUSTOMER CREATED BUT ADMIN ACCOUNT NOT CREATED!')
-                        customer.employees
-                        User.findOne({ email: req.body.adminEmail }).exec((err, admin) => {
-                            if (err) res.send('NOT ABLE TO ADD ADMIN!');
+                    if (err) res.send("NOT ABLE TO CREATE CUSTOMER!");
+                    else {
+                        User.findOne({ email: req.body.adminEmail }).exec((err, user) => {
+                            if (err) res.send("NOT ABLE TO ADD THE ADMIN IN USER'S TABLE!");
+                            else if (user != null) res.send("ADMIN ALREADY EXISTS IN THE USER'S TABLE!");
                             else {
-                                User.create({
-                                    name: 'UNDEFINED',
-                                    email: req.body.adminEmail,
-                                    password: bcrypt.hashSync('admin', salt),
-                                    role: 'ADMIN',
-                                    sign_type: 'PLATFORM',
-                                    company_id: customer._id
-                                }, (err, user) => {
-                                    if (err) res.send("NOT ABLE TO ADD ADMIN IN THE USERS COLLECTION!");
-                                    else res.send("ADMIN IS SUCCESSFULLY ADDED!");
+                                Customer.findOneAndUpdate({ email: req.body.email }, { employees: { $push: { email: req.body.adminEmail } } }).exec((err, customer) => {
+                                    if (err) res.send("NOT ABLE TO ADD THE ADMIN IN CUSTOMER'S TABLE");
+                                    else {
+                                        User.create({
+                                            name: 'UNDEFINED',
+                                            email: req.body.adminEmail,
+                                            password: bcrypt.hashSync('admin', salt),
+                                            role: 'ADMIN',
+                                            sign_type: 'PLATFORM',
+                                            company_id: customer._id
+                                        }, (err, user) => {
+                                            if (err) res.send('CUSTOMER CREATED BUT ADMIN ACCOUNT NOT CREATED!');
+                                            else res.send("CUSTOMER AND ADMIN ARE SUCCESSFULLY CREATED!");
+                                        });
+                                    }
                                 });
                             }
                         });
-                    });
+                    }
                 });
             }
         });

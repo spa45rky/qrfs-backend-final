@@ -16,7 +16,7 @@ app.use(cors())
 
 app.use('/', auth_routes);
 app.use('/admin', passport.authenticate('jwt', { session: false }), admin_routes);
-app.use('/superadmin', superadmin_routes)
+app.use('/superadmin', passport.authenticate('jwt', { session: false }), superadmin_routes)
     // app.use('/admin', admin_routes);
 app.use('/user', user_routes);
 app.use('/serviceprovider', service_provider_routes);

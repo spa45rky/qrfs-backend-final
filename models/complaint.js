@@ -7,6 +7,14 @@ const complaintSchema = mongoose.Schema({
         min: [5, "MINIMUM 10 CHARACTERS ARE REQUIRED!"],
         max: [10, "TITLE CAN'T EXCEED 10 CHARACTERS!"],
     },
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
+    complainee_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Complainee",
+    },
     company_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Customer",
