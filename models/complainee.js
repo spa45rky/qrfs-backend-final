@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 const complaineeSchema = mongoose.Schema({
-    user_id: {
+    company_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "Customer",
+        // required: true
     },
     complaints: [{
         type: Object,

@@ -1,5 +1,8 @@
 const Customer = require('../models/customer');
 const User = require('../models/user');
+const Complaint = require('../models/complaint');
+const Complainee = require('../models/complainee');
+const Dept = require('../models/department');
 const bcrypt = require('bcryptjs');
 
 exports.addCustomer = (req, res) => {
@@ -54,14 +57,34 @@ exports.addCustomer = (req, res) => {
     }
 }
 
-exports.editCustomer = (req, res) => {}
+exports.editCustomer = (req, res) => {
+
+}
 
 exports.deleteCustomer = async(req, res) => {
     try {
         await Customer.findByIdAndDelete({ _id: req.params.id }, (err, customer) => {
-            if (err) res.send(err);
-            else if (customer) res.send("CUSTOMER DOES NOT EXIST!");
-            else res.send("CUSTOMER IS SUCCESSFULLY DELETED!");
+            if (err) res.send("NOT ABLE TO DELETE THE CUSTOMER!");
+            else if (customer == null) res.send("CUSTOMER DOES NOT EXIST!");
+            else {
+                User.deleteMany({ company_id: customer._id }).exec((err, users) => {
+                    if (err) res.send("NOT ABLE TO DELETE THE USERS!");
+                    else {
+                        Complaint.deleteMany({ company_id: customer._id }).exec((err, complaints) => {
+                            if (err) res.send("NOT ABLE TO DELETE THE COMPLAINTS!");
+                            else {
+                                Complainee.deleteMany({ company_id: customer._id }).exec((err, complainees) => {
+                                    if (err) res.send("NOT ABLE TO DELETE THE COMPLAINEE!");
+                                });
+                            }
+                        });
+                        Dept.deleteMany({ company_id: customer._id }).exec((err, depts) => {
+                            if (err) res.send("NOT ABLE TO DELETE THE DEPARTMENTS!");
+                            else res.send("EVERYTHING IS DELETED SUCCESSFULLY!");
+                        });
+                    }
+                });
+            }
         });
     } catch (err) {
         console.log("NOT ABLE TO DELETE THE CUSTOMER! " + err);
