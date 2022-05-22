@@ -282,7 +282,7 @@ exports.getSpecificDept = async(req, res) => {
 exports.addSpecificDept = (req, res) => {
     try {
         const dept_title = req.body.title;
-        const company_id = mongoose.Types.ObjectId(req.params.company_id);
+        const company_id = mongoose.Types.ObjectId(req.params.id);
         Department.create({
             title: dept_title,
             company_id: company_id
