@@ -5,7 +5,7 @@ const adminController = require('../controllers/adminController');
 // ADMIN USER ROUTES
 admin_router.get('/users/all/:id', adminController.getUsersList);
 // admin_router.get('/users/:id', adminController.getSpecificUser);
-admin_router.post('/users/add', adminController.addSpecificUser);
+admin_router.post('/users/add/:id', adminController.addSpecificUser);
 admin_router.put('/users/update/:id', adminController.updateSpecificUser);
 admin_router.delete('/users/delete/:id', adminController.deleteSpecificUser);
 admin_router.delete('/users/deleteMultiple', adminController.deleteMultipleUsers);
