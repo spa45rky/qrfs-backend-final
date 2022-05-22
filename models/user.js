@@ -29,7 +29,7 @@ const userSchema = mongoose.Schema({
     },
     company_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Customer",
+        // ref: "Customer",
         // required: true
     },
     pfp: {
