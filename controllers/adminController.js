@@ -288,7 +288,12 @@ exports.addSpecificDept = (req, res) => {
             company_id: company_id
         }, (err, department) => {
             if (err) res.send("NOT ABLE TO ADD THE DEPARTMENT!");
-            else res.send("DEPARTMENT IS SUCCESSFULLY ADDED!");
+            else {
+                Customer.updateOne({ _id: company_id }, { $push: { departments: { title: dept_title } } }).exec((err, customer) => {
+                    if (err) res.send("NOT ABLE TO ADD THE DEPARTMENT IN CUSTOMER'S TABLE!");
+                    else res.send("DEPARTMENT IS SUCCESSFULLY ADDED AND CUSTOMER IS SUCCESSFULLY UPDATED!");
+                });
+            }
         });
     } catch (err) {
         console.log(err);

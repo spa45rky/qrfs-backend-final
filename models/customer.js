@@ -26,8 +26,9 @@ const customerSchema = mongoose.Schema({
         ref: "Addon"
     }],
     departments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Department"
+        title: {
+            type: String
+        }
     }],
     // analytics: {},
     billing_info: {
