@@ -12,13 +12,12 @@ exports.getUsersList = (req, res) => {
     try {
         const company_id = mongoose.Types.ObjectId(req.params.id);
         User.find({ company_id: company_id }).exec((err, result) => {
-            if (err) return res.send("NOT ABLE TO FIND ANY USER!");
-            else if (result == null) return res.send("USERS DOES NOT EXIST!");
-            else return res.json(result);
+            if (err) res.send("NOT ABLE TO FIND ANY USER!");
+            else if (result == null) res.send("USERS DOES NOT EXIST!");
+            else res.json(result);
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
@@ -37,8 +36,8 @@ exports.addSpecificUser = (req, res) => {
         const email = req.body.email;
         const role = req.body.role;
         User.findOne({ name: full_name, email: email }).exec((err, user) => {
-            if (err) return res.send("1." + err);
-            else if (user) return res.send("USER ALREADY EXISTS!");
+            if (err) res.send(err);
+            else if (user) res.send("USER ALREADY EXISTS!");
             else {
                 User.create({
                     name: req.body.name,
@@ -49,29 +48,28 @@ exports.addSpecificUser = (req, res) => {
                     company_id: mongoose.Types.ObjectId(req.params.id)
                 }, (err, user) => {
                     if (err) {
-                        return res.send("NOT ABLE TO ADD THE USER!" + err);
+                        res.send("NOT ABLE TO ADD THE USER!" + err);
                     } else {
                         Customer.updateOne({ __id: req.params.id }, { $push: { employees: { email: user.email } } }).exec((err, result) => {
-                            if (err) return res.send("NOT ABLE TO ADD THE USER'S EMAIL IN THE EMPLOYEES ARRAY!");
+                            if (err) res.send("NOT ABLE TO ADD THE USER'S EMAIL IN THE EMPLOYEES ARRAY!");
                             else {
                                 if (role == "COMPLAINEE") {
                                     Complainee.create({
                                         user_id: user._id,
                                         company_id: user.company_id
                                     }, (err, result) => {
-                                        if (err) return res.send("2." + err);
-                                        else return res.send("BOTH USER AND COMPLAINEE ARE CREATED!");
+                                        if (err) res.send(err);
+                                        else res.send("BOTH USER AND COMPLAINEE ARE CREATED!");
                                     });
                                 } else if (role == "SERVICEPROVIDER") {
                                     SP.create({
                                         user_id: user._id,
                                         company_id: user.company_id
                                     }, (err, result) => {
-                                        if (err) return res.send("3." + err);
-                                        else return res.send("BOTH USER AND SERVICEPROVIDER ARE CREATED!");
+                                        if (err) res.send(err);
+                                        else res.send("BOTH USER AND SERVICEPROVIDER ARE CREATED!");
                                     });
                                 }
-                                return res.send("USER IS SUCCESSFULLY ADDED!");
                             }
                         });
                     }
@@ -80,7 +78,6 @@ exports.addSpecificUser = (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        res.sendStatus(500);
         return;
     }
 }
@@ -91,12 +88,11 @@ exports.updateSpecificUser = async(req, res) => {
         const full_name = req.body.name;
         const email = req.body.email;
         await User.findByIdAndUpdate(id, { name: full_name, email: email }, (err, user) => {
-            if (err) return res.send("NOT ABLE TO UPDATE THE USER!");
-            else return res.send("USER IS SUCCESSFULLY UPDATED!");
+            if (err) res.send("NOT ABLE TO UPDATE THE USER!");
+            else res.send("USER IS SUCCESSFULLY UPDATED!");
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
@@ -104,8 +100,8 @@ exports.deleteSpecificUser = async(req, res) => {
     try {
         const user_id = req.params.id;
         await User.findByIdAndDelete(user_id, (err, user) => {
-            if (err) return res.send("NOT ABLE TO DELETE THE USER!");
-            else return res.send("USER IS SUCCESSFULLY DELETED!");
+            if (err) res.send("NOT ABLE TO DELETE THE USER!");
+            else res.send("USER IS SUCCESSFULLY DELETED!");
         });
     } catch (err) {
         console.log(err);
@@ -117,13 +113,12 @@ exports.deleteMultipleUsers = (req, res) => {
         const user_ids = req.body.ids;
         user_ids.forEach(id => {
             User.findByIdAndDelete(id, (err, user) => {
-                if (err) return res.send("NOT ABLE TO DELETE THE USER WITH ID: " + id);
-                else return res.send("SUCCESSFULLY DELETED ALL THE MENTIONED USERS!");
+                if (err) res.send("NOT ABLE TO DELETE THE USER WITH ID: " + id);
+                else res.send("SUCCESSFULLY DELETED ALL THE MENTIONED USERS!");
             });
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
@@ -177,12 +172,11 @@ exports.deleteMultipleUsers = (req, res) => {
 exports.getComplaintsList = async(req, res) => {
     try {
         await Complaint.find({}, (err, complaints) => {
-            if (err) return res.send("OOPS... NO DATA IN THE DATABASE!");
-            else return res.send(complaints);
+            if (err) res.send("OOPS... NO DATA IN THE DATABASE!");
+            else res.send(complaints);
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
@@ -203,13 +197,12 @@ exports.updateSpecificComplaint = async(req, res) => {
     try {
         const id = req.params.id;
         await Complaint.findByIdAndUpdate(id, {}, (err, complaint) => {
-            if (err) return res.send("NOT ABLE TO UPDATE THE COMPLAINT!");
-            else if (complaint == null) return res.send("COMPLAINT NOT FOUND!");
-            else return res.send("COMPLAINT IS SUCCESSFULLY UPDATED!");
+            if (err) res.send("NOT ABLE TO UPDATE THE COMPLAINT!");
+            else if (complaint == null) res.send("COMPLAINT NOT FOUND!");
+            else res.send("COMPLAINT IS SUCCESSFULLY UPDATED!");
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
@@ -217,13 +210,12 @@ exports.deleteSpecificComplaint = async(req, res) => {
     try {
         const complaint_id = req.params.id;
         await Complaint.findByIdAndDelete(complaint_id, (err, complaint) => {
-            if (err) return res.send("NOT ABLE TO DELETE THE COMPLAINT!");
-            else if (complaint == null) return res.send("COMPLAINT NOT FOUND!");
-            else return res.send("COMPLAINT IS SUCCESSFULLY DELETED!");
+            if (err) res.send("NOT ABLE TO DELETE THE COMPLAINT!");
+            else if (complaint == null) res.send("COMPLAINT NOT FOUND!");
+            else res.send("COMPLAINT IS SUCCESSFULLY DELETED!");
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
@@ -231,25 +223,23 @@ exports.archiveSpecificComplaint = async(req, res) => {
     try {
         const complaint_id = req.params.id;
         await Complaint.findByIdAndUpdate(complaint_id, { status: "archived" }, (err, complaint) => {
-            if (err) return res.send("NOT ABLE TO ARCHIVE THE COMPLAINT!");
-            else if (complaint == null) return res.send("COMPLAINT NOT FOUND!");
-            else return res.send("COMPLAINT IS SUCCESSFULLY ARCHIVED!");
+            if (err) res.send("NOT ABLE TO ARCHIVE THE COMPLAINT!");
+            else if (complaint == null) res.send("COMPLAINT NOT FOUND!");
+            else res.send("COMPLAINT IS SUCCESSFULLY ARCHIVED!");
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
 exports.getDeptsList = async(req, res) => {
     try {
         await Department.find({}, (err, depts) => {
-            if (err) return res.send("OOPS... NO DATA IN THE DATABASE!");
-            else return res.send(depts);
+            if (err) res.send("OOPS... NO DATA IN THE DATABASE!");
+            else res.send(depts);
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
@@ -257,13 +247,12 @@ exports.getSpecificDept = async(req, res) => {
     try {
         const dept_id = req.query.id;
         await Department.findOne({ id: dept_id }, (err, dept) => {
-            if (err) return res.send("DEPT DOES NOT EXIST!");
-            else if (dept == null) return res.send("DEPT NOT FOUND!");
-            else return res.send(dept);
+            if (err) res.send("DEPT DOES NOT EXIST!");
+            else if (dept == null) res.send("DEPT NOT FOUND!");
+            else res.send(dept);
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
@@ -277,17 +266,16 @@ exports.addSpecificDept = (req, res) => {
         dept.category.push(category);
         category.save();
         dept.save((err, dept) => {
-            if (err) return res.send("NOT ABLE TO SAVE THE DEPARTMENT!");
+            if (err) res.send("NOT ABLE TO SAVE THE DEPARTMENT!");
             else {
                 Department.findOne({ title: dept_title }).populate('category').exec((err, dept) => {
-                    if (err) return res.send("NOT ABLE TO ADD DEPARTMENT!");
-                    else return res.send("DEPARTMENT IS SUCCESSFULLY ADDED!" + JSON.stringify(dept));
+                    if (err) res.send("NOT ABLE TO ADD DEPARTMENT!");
+                    else res.send("DEPARTMENT IS SUCCESSFULLY ADDED!" + JSON.stringify(dept));
                 });
             }
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
@@ -296,13 +284,12 @@ exports.updateSpecificDept = async(req, res) => {
         const id = req.params.id;
         const dept_title = req.body.title;
         await Department.findByIdAndUpdate(id, { title: dept_title }, (err, dept) => {
-            if (err) return res.send("NOT ABLE TO UPDATE THE DEPT!");
-            else if (dept == null) return res.send("DEPT NOT FOUND!");
-            else return res.send("DEPT IS SUCCESSFULLY UPDATED!");
+            if (err) res.send("NOT ABLE TO UPDATE THE DEPT!");
+            else if (dept == null) res.send("DEPT NOT FOUND!");
+            else res.send("DEPT IS SUCCESSFULLY UPDATED!");
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
 
@@ -310,12 +297,11 @@ exports.deleteSpecificDept = async(req, res) => {
     try {
         const dept_id = req.params.id;
         await Department.findByIdAndDelete(dept_id, (err, dept) => {
-            if (err) return res.send("NOT ABLE TO DELETE THE DEPT!");
-            else if (dept == null) return res.send("DEPT NOT FOUND!");
-            else return res.send("DEPT IS SUCCESSFULLY DELETED!");
+            if (err) res.send("NOT ABLE TO DELETE THE DEPT!");
+            else if (dept == null) res.send("DEPT NOT FOUND!");
+            else res.send("DEPT IS SUCCESSFULLY DELETED!");
         });
     } catch (err) {
         console.log(err);
-        return res.sendStatus(500);
     }
 }
