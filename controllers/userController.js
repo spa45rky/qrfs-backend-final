@@ -40,9 +40,9 @@ exports.fileNewComplaint = (req, res) => {
                 const id = category.assignedDepartment._id;
                 Department.findOne({ _id: id }).exec((err, department) => {
                     SP.findMany({ department: department.id }).exec((err, sps) => {
-                        if (err) res.send(err);
-                        else if (sps == null) res.send("SERVICEPROVIDERS DOESN'T EXIST!");
-                        else res.json(sps);
+                        // if (err) res.send(err);
+                        // else if (sps == null) res.send("SERVICEPROVIDERS DOESN'T EXIST!");
+                        // else res.json(sps);
                     });
                 });
             }

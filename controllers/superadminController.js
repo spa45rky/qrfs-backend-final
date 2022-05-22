@@ -3,6 +3,7 @@ const User = require('../models/user');
 const Complaint = require('../models/complaint');
 const Complainee = require('../models/complainee');
 const Dept = require('../models/department');
+const SP = require('../models/serviceProvider');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 
@@ -92,9 +93,9 @@ exports.editCustomer = (req, res) => {
     }
 }
 
-exports.deleteCustomer = async(req, res) => {
+exports.deleteCustomer = (req, res) => {
     try {
-        await Customer.findByIdAndDelete({ _id: req.params.id }, (err, customer) => {
+        Customer.findByIdAndDelete({ _id: req.params.id }).exec((err, customer) => {
             if (err) res.send("NOT ABLE TO DELETE THE CUSTOMER!");
             else if (customer == null) res.send("CUSTOMER DOES NOT EXIST!");
             else {
@@ -106,12 +107,20 @@ exports.deleteCustomer = async(req, res) => {
                             else {
                                 Complainee.deleteMany({ company_id: customer._id }).exec((err, complainees) => {
                                     if (err) res.send("NOT ABLE TO DELETE THE COMPLAINEE!");
+                                    else {
+                                        SP.deleteMany({ company_id: customer._id }).exec((err, sps) => {
+                                            if (err) res.snd("NOT ABLE TO DELETE THE SERVICEPROVIDERS!");
+                                            else {
+                                                // Dept.deleteMany({ company_id: customer._id }).exec((err, depts) => {
+                                                //     if (err) res.send("NOT ABLE TO DELETE THE DEPARTMENTS!");
+                                                //     else res.send("EVERYTHING IS DELETED SUCCESSFULLY!");
+                                                // });
+                                                res.send("EVERYTHING IS DELETED SUCCESSFULLY!");
+                                            }
+                                        });
+                                    }
                                 });
                             }
-                        });
-                        Dept.deleteMany({ company_id: customer._id }).exec((err, depts) => {
-                            if (err) res.send("NOT ABLE TO DELETE THE DEPARTMENTS!");
-                            else res.send("EVERYTHING IS DELETED SUCCESSFULLY!");
                         });
                     }
                 });
