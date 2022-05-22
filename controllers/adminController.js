@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Complaint = require('../models/complaint');
 const Category = require('../models/category');
 const Department = require('../models/department');
+const mongoose = require('mongoose');
 
 exports.getUsersList = async(req, res) => {
     try {
@@ -231,33 +232,21 @@ exports.getSpecificDept = async(req, res) => {
 exports.addSpecificDept = (req, res) => {
     try {
         const dept_title = req.body.title;
-        const company_id = req.params.company_id;
+        const company_id = mongoose.Types.ObjectId(req.params.company_id);
         const category_title = req.body.category_title;
         const dept = new Department({ title: dept_title, company_id: company_id });
         const category = new Category({ title: category_title, company_id: company_id });
+        dept.category.push(category);
+        category.save();
         dept.save((err, dept) => {
             if (err) res.send("NOT ABLE TO SAVE THE DEPARTMENT!");
             else {
-                dept.category.push(category);
                 Department.findOne({ title: dept_title }).populate('category').exec((err, dept) => {
                     if (err) res.send("NOT ABLE TO ADD DEPARTMENT!");
                     else res.send("DEPARTMENT IS SUCCESSFULLY ADDED!" + JSON.stringify(dept));
                 });
             }
         });
-        // await Department.findOne({ title: dept_title }, (err, dept) => {
-        //     if (err) console.log("NOT ABLE TO ADD THE DEPT!");
-        //     else if (dept) res.send("DEPT ALREADY EXISTS!");
-        //     else {
-        //         Department.create({
-        //             title: req.body.title,
-        //             company_id: company_id
-        //         }, (err, dept) => {
-        //             if (err) res.send("NOT ABLE TO ADD THE DEPT!");
-        //             res.send("DEPT IS SUCCESSFULLY ADDED!");
-        //         });
-        //     }
-        // });
     } catch (err) {
         console.log(err);
     }
