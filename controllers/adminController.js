@@ -232,9 +232,9 @@ exports.archiveSpecificComplaint = async(req, res) => {
     }
 }
 
-exports.getDeptsList = async(req, res) => {
+exports.getDeptsList = (req, res) => {
     try {
-        await Department.findMany({ company_id: id }, (err, depts) => {
+        Department.find({ company_id: req.params.id }).exec((err, depts) => {
             if (err) res.send("OOPS... NO DATA IN THE DATABASE!");
             else res.send(depts);
         });
