@@ -10,7 +10,7 @@ exports.getUsersList = (req, res) => {
         User.find({ company_id: company_id }).exec((err, result) => {
             if (err) res.send("NOT ABLE TO FIND ANY USER!");
             else if (result == null) res.send("USERS DOES NOT EXIST!");
-            else res.send("USERS: " + JSON.stringify(result));
+            else res.json(result);
         });
     } catch (err) {
         console.log(err);
