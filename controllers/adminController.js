@@ -50,7 +50,7 @@ exports.addSpecificUser = (req, res) => {
                     if (err) {
                         res.send("NOT ABLE TO ADD THE USER!" + err);
                     } else {
-                        Customer.updateOne({ __id: req.params.id }, { $push: { employees: { email: user.email } } }).exec((err, result) => {
+                        Customer.updateOne({ _id: user.company_id }, { $push: { employees: { email: user.email } } }).exec((err, result) => {
                             if (err) res.send("NOT ABLE TO ADD THE USER'S EMAIL IN THE EMPLOYEES ARRAY!");
                             else {
                                 if (role == "COMPLAINEE") {
