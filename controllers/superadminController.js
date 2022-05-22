@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs');
 
 exports.getAllCustomers = async(req, res) => {
     try {
+        // getting all the registered customers
         await Customer.find({}, (err, customers) => {
             if (err) res.send("NOT ABLE TO GET CUSTOMERS LIST!");
             else res.send(JSON.stringify(customers));
