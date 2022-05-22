@@ -59,6 +59,25 @@ exports.login = async(req, res) => {
     }
 }
 
+// exports.extra = async(req, res) => {
+//     let salt = bcrypt.genSaltSync(10);
+//     try{
+//         await User.create({
+//             name: "Rehber Odhano",
+//             email: "rehber.odhano30@gmail.com",
+//             password: bcrypt.hashSync('testpass', salt),
+//             role: "SUPERADMIN",
+//             sign_type: "PLATFORM",
+//             company_id: "628a427b37e194b45b798a3a"
+//         }, (err, user) => {
+//             if (err) res.send(err)
+//             res.send(user)
+//         })
+//     } catch (err) {
+//         console.log(err)
+//     }
+// }
+
 
 // exports.profile = (requiresAuth(), (req, res) => {
 //     res.send(req.oidc.isAuthenticated() ? JSON.stringify(req.oidc.user) : "Logged out!");
