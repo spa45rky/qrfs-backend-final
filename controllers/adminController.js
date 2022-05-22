@@ -234,7 +234,7 @@ exports.archiveSpecificComplaint = async(req, res) => {
 
 exports.getDeptsList = async(req, res) => {
     try {
-        await Department.find({}, (err, depts) => {
+        await Department.findMany({ company_id: id }, (err, depts) => {
             if (err) res.send("OOPS... NO DATA IN THE DATABASE!");
             else res.send(depts);
         });
