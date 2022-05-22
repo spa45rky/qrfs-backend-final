@@ -33,7 +33,7 @@ exports.addCustomer = (req, res) => {
                 }, (err, customer) => {
                     if (err) res.send("NOT ABLE TO CREATE CUSTOMER!");
                     else {
-                        const company_id = mongoose.Types.ObjectId(customer.company_id);
+                        const company_id = mongoose.Types.ObjectId(customer._id);
                         User.findOne({ email: req.body.adminEmail }).exec((err, user) => {
                             if (err) res.send("NOT ABLE TO ADD THE ADMIN IN USER'S TABLE!");
                             else if (user != null) res.send("ADMIN ALREADY EXISTS IN THE USER'S TABLE!");
