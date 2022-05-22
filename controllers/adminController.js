@@ -2,6 +2,9 @@ const User = require('../models/user');
 const Complaint = require('../models/complaint');
 const Category = require('../models/category');
 const Department = require('../models/department');
+const Complainee = require('../models/complainee');
+const SP = require('../models/serviceProvider');
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 
 exports.getUsersList = (req, res) => {
@@ -27,8 +30,10 @@ exports.getUsersList = (req, res) => {
 
 exports.addSpecificUser = async(req, res) => {
     try {
+        let salt = bcrypt.genSaltSync(10);
         const full_name = req.body.name;
         const email = req.body.email;
+        const role = req.body.role;
         await User.findOne({ name: full_name, email: email }, (err, user) => {
             if (err) console.log(err);
             else if (user) res.send("USER ALREADY EXISTS!");
@@ -36,13 +41,33 @@ exports.addSpecificUser = async(req, res) => {
                 User.create({
                     name: req.body.name,
                     email: req.body.email,
-                    password: req.body.password,
-                    role: "COMPLAINEE"
+                    password: bcrypt.hashSync('user', salt),
+                    role: role,
+                    company_id: mongoose.Types.ObjectId(req.params.id)
                 }, (err, user) => {
                     if (err) {
                         console.log("\n\n" + err);
                         res.send("NOT ABLE TO ADD THE USER!");
-                    } else res.send("USER IS SUCCESSFULLY ADDED!");
+                    } else {
+                        if (role == "COMPLAINEE") {
+                            Complainee.create({
+                                user_id: user._id,
+                                company_id: user.company_id
+                            }, (err, result) => {
+                                if (err) res.send(err);
+                                else res.send("BOTH USER AND COMPLAINEE ARE CREATED!");
+                            });
+                        } else if (role == "SERVICEPROVIDER") {
+                            SP.create({
+                                user_id: user._id,
+                                company_id: user.company_id
+                            }, (err, result) => {
+                                if (err) res.send(err);
+                                else res.send("BOTH USER AND SERVICEPROVIDER ARE CREATED!");
+                            });
+                        }
+                        res.send("USER IS SUCCESSFULLY ADDED!");
+                    }
                 });
             }
         });

@@ -1,6 +1,8 @@
 const Complaint = require('../models/complaint');
 const User = require('../models/user');
 const Complainee = require('../models/complainee');
+const Department = require('../models/department');
+const SP = require('../models/serviceProvider');
 
 exports.getAllComplaints = async(req, res) => {
     try {
@@ -21,19 +23,30 @@ exports.fileNewComplaint = (req, res) => {
         const description = req.body.description;
         const category = req.body.category; // complete object
         const date_created = new Date();
-        const status = (category == null) ? "pending" : "created";
         const user_id = req.params.id;
-        Complaint.create({
-            title: title,
-            description: description,
-            category: category,
-            dateCreated: date_created,
-            status: status,
-            user_id: user_id
-        }, (err, complaint) => {
-            if (err) res.send("NOT ABLE TO FILE A COMPLAINT! " + err);
-            else res.send("COMPLAINT IS SUCCESSFULLY FILED!");
-        });
+        if (category !== 0) {
+            if (category.assignedDepartment) {
+                const id = category.assignedDepartment._id;
+                Department.findOne({ _id: id }).exec((err, department) => {
+                    SP.findMany({ department: department.id }).exec((err, sps) => {
+                        if (err) res.send(err);
+                        else if (sps == null) res.send("SERVICEPROVIDERS DOESN'T EXIST!");
+                        else res.json(sps);
+                    });
+                });
+            }
+        }
+        // Complaint.create({
+        //     title: title,
+        //     description: description,
+        //     category: category,
+        //     dateCreated: date_created,
+        //     status: status,
+        //     user_id: user_id
+        // }, (err, complaint) => {
+        //     if (err) res.send("NOT ABLE TO FILE A COMPLAINT! " + err);
+        //     else res.send("COMPLAINT IS SUCCESSFULLY FILED!");
+        // });
     } catch (err) {
         console.log(err);
     }
