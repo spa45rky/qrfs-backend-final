@@ -26,6 +26,9 @@ const customerSchema = mongoose.Schema({
         ref: "Addon"
     }],
     departments: [{
+        _id: {
+            type: mongoose.Schema.Types.ObjectId
+        },
         title: {
             type: String
         }

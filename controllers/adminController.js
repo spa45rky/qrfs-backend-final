@@ -289,7 +289,7 @@ exports.addSpecificDept = (req, res) => {
         }, (err, department) => {
             if (err) res.send("NOT ABLE TO ADD THE DEPARTMENT!");
             else {
-                Customer.updateOne({ _id: company_id }, { $push: { departments: { title: dept_title } } }).exec((err, customer) => {
+                Customer.updateOne({ _id: company_id }, { $push: { departments: { title: dept_title, _id: department._id } } }).exec((err, customer) => {
                     if (err) res.send("NOT ABLE TO ADD THE DEPARTMENT IN CUSTOMER'S TABLE!");
                     else res.send("DEPARTMENT IS SUCCESSFULLY ADDED AND CUSTOMER IS SUCCESSFULLY UPDATED!");
                 });
@@ -314,13 +314,18 @@ exports.updateSpecificDept = async(req, res) => {
     }
 }
 
-exports.deleteSpecificDept = async(req, res) => {
+exports.deleteSpecificDept = (req, res) => {
     try {
-        const dept_id = req.params.id;
-        await Department.findByIdAndDelete(dept_id, (err, dept) => {
+        const dept_id = mongoose.Types.ObjectId(req.params.id);
+        Department.findByIdAndDelete({ _id: dept_id }).exec((err, dept) => {
             if (err) res.send("NOT ABLE TO DELETE THE DEPT!");
             else if (dept == null) res.send("DEPT NOT FOUND!");
-            else res.send("DEPT IS SUCCESSFULLY DELETED!");
+            else {
+                Customer.updateOne({ _id: dept.company_id }, { $pull: { departments: { _id: dept_id } } }).exec((err, result) => {
+                    if (err) res.send("NOT ABLE TO DELETE DEPARTMENTS FROM THE CUSTOMER'S TABLE!");
+                    else res.send("DEPARTMENT IS SUCCESSFULLY DELETED FROM THE DEPARTMENT'S AND CUSTOMER'S TABLE!");
+                });
+            }
         });
     } catch (err) {
         console.log(err);
