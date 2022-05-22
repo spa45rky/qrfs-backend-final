@@ -69,24 +69,29 @@ exports.addCustomer = (req, res) => {
 exports.editCustomer = (req, res) => {
     try {
         const filter = { _id: req.params.id };
-        const updated_custmer_obj = {
-            title: req.body.title,
-            email: req.body.email,
-            employees: req.body.employees,
-            addons: req.body.addons,
-            departments: req.body.departments
-        };
         // const updated_custmer_obj = {
-        //     title: (req.body.title == null) ? req.body.title : customer.title,
-        //     email: (req.body.email == null) ? req.body.email : customer.email,
-        //     employees: (req.body.employees == null) ? req.body.employees : customer.employees,
-        //     addons: (req.body.addons == null) ? req.body.addons : customer.addons,
-        //     departments: (req.body.departments == null) ? req.body.departments : customer.departments
+        //     title: req.body.title,
+        //     email: req.body.email,
+        //     employees: req.body.employees,
+        //     addons: req.body.addons,
+        //     departments: req.body.departments
         // };
-        Customer.findOneAndUpdate(filter, updated_custmer_obj).exec((err, customer) => {
-            if (err) res.send("NOT ABLE TO UPDATE THE CUSTOMER!");
+        Customer.findById({ _id: mongoose.Types.ObjectId(req.params.id) }).exec((err, customer) => {
+            if (err) res.send("NOT ABLE TO FIND THE CUSTOMER!");
             else if (customer == null) res.send("CUSTOMER DOES NOT EXIST!");
-            else res.send("CUSTOMER IS SUCCESSFULLY UPDATED!");
+            else {
+                const updated_custmer_obj = {
+                    title: (req.body.title == null) ? customer.title : req.body.title,
+                    email: (req.body.email == null) ? customer.email : req.body.email,
+                    employees: (req.body.employees == null) ? customer.employees : req.body.employees,
+                    addons: (req.body.addons == null) ? customer.addons : req.body.addons,
+                    departments: (req.body.departments == null) ? customer.departments : req.body.departments
+                };
+                Customer.updateOne(filter, updated_custmer_obj, { upsert: true }).exec((err, customer) => {
+                    if (err) res.send("NOT ABLE TO UPDATE THE CUSTOMER!");
+                    else res.send("CUSTOMER IS SUCCESSFULLY UPDATED!");
+                });
+            }
         });
     } catch (error) {
         console.log("NOT ABLE TO UPDATE THE CUSTOMER! " + error);
