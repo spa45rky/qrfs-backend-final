@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const complaintsSchema = require('../models/complaint');
 
 const deptSchema = mongoose.Schema({
     title: {

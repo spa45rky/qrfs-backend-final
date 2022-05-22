@@ -256,23 +256,39 @@ exports.getSpecificDept = async(req, res) => {
     }
 }
 
+// exports.addSpecificDept = (req, res) => {
+//     try {
+//         const dept_title = req.body.title;
+//         const company_id = mongoose.Types.ObjectId(req.params.company_id);
+//         const category_title = req.body.category_title;
+//         const dept = new Department({ title: dept_title, company_id: company_id });
+//         const category = new Category({ title: category_title, company_id: company_id });
+//         dept.category.push(category);
+//         category.save();
+//         dept.save((err, dept) => {
+//             if (err) res.send("NOT ABLE TO SAVE THE DEPARTMENT!");
+//             else {
+//                 Department.findOne({ title: dept_title }).populate('category').exec((err, dept) => {
+//                     if (err) res.send("NOT ABLE TO ADD DEPARTMENT!");
+//                     else res.send("DEPARTMENT IS SUCCESSFULLY ADDED!" + JSON.stringify(dept));
+//                 });
+//             }
+//         });
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
+
 exports.addSpecificDept = (req, res) => {
     try {
         const dept_title = req.body.title;
         const company_id = mongoose.Types.ObjectId(req.params.company_id);
-        const category_title = req.body.category_title;
-        const dept = new Department({ title: dept_title, company_id: company_id });
-        const category = new Category({ title: category_title, company_id: company_id });
-        dept.category.push(category);
-        category.save();
-        dept.save((err, dept) => {
-            if (err) res.send("NOT ABLE TO SAVE THE DEPARTMENT!");
-            else {
-                Department.findOne({ title: dept_title }).populate('category').exec((err, dept) => {
-                    if (err) res.send("NOT ABLE TO ADD DEPARTMENT!");
-                    else res.send("DEPARTMENT IS SUCCESSFULLY ADDED!" + JSON.stringify(dept));
-                });
-            }
+        Department.create({
+            title: dept_title,
+            company_id: company_id
+        }, (err, department) => {
+            if (err) res.send("NOT ABLE TO ADD THE DEPARTMENT!");
+            else res.send("DEPARTMENT IS SUCCESSFULLY ADDED!");
         });
     } catch (err) {
         console.log(err);
