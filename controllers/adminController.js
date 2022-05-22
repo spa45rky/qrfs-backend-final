@@ -28,13 +28,13 @@ exports.getUsersList = (req, res) => {
 //     });
 // }
 
-exports.addSpecificUser = async(req, res) => {
+exports.addSpecificUser = (req, res) => {
     try {
         let salt = bcrypt.genSaltSync(10);
         const full_name = req.body.name;
         const email = req.body.email;
         const role = req.body.role;
-        await User.findOne({ name: full_name, email: email }, (err, user) => {
+        User.findOne({ name: full_name, email: email }).exec((err, user) => {
             if (err) console.log(err);
             else if (user) res.send("USER ALREADY EXISTS!");
             else {
