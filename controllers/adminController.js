@@ -4,13 +4,13 @@ const Category = require('../models/category');
 const Department = require('../models/department');
 const mongoose = require('mongoose');
 
-exports.getUsersList = async(req, res) => {
+exports.getUsersList = (req, res) => {
     try {
-        await User.find({}, (err, users) => {
-            if (err) res.send("OOPS... NO DATA IN THE DATABASE!");
-            else {
-                res.send(users);
-            }
+        const company_id = mongoose.Types.ObjectId(req.params.id);
+        User.find({ company_id: company_id }).exec((err, result) => {
+            if (err) res.send("NOT ABLE TO FIND ANY USER!");
+            else if (result == null) res.send("USERS DOES NOT EXIST!");
+            else res.send("USERS: " + JSON.stringify(result));
         });
     } catch (err) {
         console.log(err);

@@ -3,7 +3,7 @@ const admin_router = express.Router();
 const adminController = require('../controllers/adminController');
 
 // ADMIN USER ROUTES
-admin_router.get('/users', adminController.getUsersList);
+admin_router.get('/users/all/:id', adminController.getUsersList);
 // admin_router.get('/users/:id', adminController.getSpecificUser);
 admin_router.post('/users/add', adminController.addSpecificUser);
 admin_router.put('/users/update/:id', adminController.updateSpecificUser);

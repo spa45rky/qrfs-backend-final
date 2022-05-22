@@ -19,9 +19,9 @@ exports.fileNewComplaint = (req, res) => {
     try {
         const title = req.body.title;
         const description = req.body.description;
-        const category = "default";
+        const category = req.body.category; // complete object
         const date_created = new Date();
-        const status = "created";
+        const status = (category == null) ? "pending" : "created";
         const user_id = req.params.id;
         Complaint.create({
             title: title,
