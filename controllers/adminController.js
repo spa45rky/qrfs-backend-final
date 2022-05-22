@@ -235,10 +235,15 @@ exports.addSpecificDept = (req, res) => {
         const category_title = req.body.category_title;
         const dept = new Department({ title: dept_title, company_id: company_id });
         const category = new Category({ title: category_title, company_id: company_id });
-        dept.category.push(category);
-        Department.findOne({ title: dept_title }).populate('category').exec((err, dept) => {
-            if (err) res.send("NOT ABLE TO ADD DEPARTMENT!");
-            else res.send("DEPARTMENT IS SUCCESSFULLY ADDED!");
+        dept.save((err, dept) => {
+            if (err) res.send("NOT ABLE TO SAVE THE DEPARTMENT!");
+            else {
+                dept.category.push(category);
+                Department.findOne({ title: dept_title }).populate('category').exec((err, dept) => {
+                    if (err) res.send("NOT ABLE TO ADD DEPARTMENT!");
+                    else res.send("DEPARTMENT IS SUCCESSFULLY ADDED!" + JSON.stringify(dept));
+                });
+            }
         });
         // await Department.findOne({ title: dept_title }, (err, dept) => {
         //     if (err) console.log("NOT ABLE TO ADD THE DEPT!");

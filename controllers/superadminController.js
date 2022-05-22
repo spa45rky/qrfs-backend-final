@@ -18,7 +18,6 @@ exports.getAllCustomers = async(req, res) => {
     }
 }
 
-
 exports.addCustomer = (req, res) => {
     try {
         let salt = bcrypt.genSaltSync(10);
@@ -33,6 +32,7 @@ exports.addCustomer = (req, res) => {
                 }, (err, customer) => {
                     if (err) res.send("NOT ABLE TO CREATE CUSTOMER!");
                     else {
+                        const company_id = customer.company_id;
                         User.findOne({ email: req.body.adminEmail }).exec((err, user) => {
                             if (err) res.send("NOT ABLE TO ADD THE ADMIN IN USER'S TABLE!");
                             else if (user != null) res.send("ADMIN ALREADY EXISTS IN THE USER'S TABLE!");
@@ -46,7 +46,7 @@ exports.addCustomer = (req, res) => {
                                             password: bcrypt.hashSync('admin', salt),
                                             role: 'ADMIN',
                                             sign_type: 'PLATFORM',
-                                            company_id: customer._id
+                                            company_id: company_id
                                         }, (err, user) => {
                                             if (err) res.send('CUSTOMER CREATED BUT ADMIN ACCOUNT NOT CREATED!');
                                             else res.send("CUSTOMER AND ADMIN ARE SUCCESSFULLY CREATED!");
