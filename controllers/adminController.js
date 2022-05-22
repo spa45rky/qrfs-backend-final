@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Complaint = require('../models/complaint');
+const Category = require('../models/category');
 const Department = require('../models/department');
 
 exports.getUsersList = async(req, res) => {
@@ -25,14 +26,13 @@ exports.getUsersList = async(req, res) => {
 
 exports.addSpecificUser = async(req, res) => {
     try {
-        // console.log(req.body);
         const full_name = req.body.name;
         const email = req.body.email;
-        await User.findOne({ name: full_name, email: email }, async (err, user) => {
+        await User.findOne({ name: full_name, email: email }, (err, user) => {
             if (err) console.log(err);
             else if (user) res.send("USER ALREADY EXISTS!");
             else {
-                 await User.create({
+                User.create({
                     name: req.body.name,
                     email: req.body.email,
                     password: req.body.password,
@@ -41,11 +41,10 @@ exports.addSpecificUser = async(req, res) => {
                     if (err) {
                         console.log("\n\n" + err);
                         res.send("NOT ABLE TO ADD THE USER!");
-                    }
-                    res.send("USER IS SUCCESSFULLY ADDED!");
+                    } else res.send("USER IS SUCCESSFULLY ADDED!");
                 });
             }
-        }).clone();
+        });
     } catch (err) {
         console.log(err);
     }
@@ -229,21 +228,31 @@ exports.getSpecificDept = async(req, res) => {
     }
 }
 
-exports.addSpecificDept = async(req, res) => {
+exports.addSpecificDept = (req, res) => {
     try {
         const dept_title = req.body.title;
-        await Department.findOne({ title: dept_title }, (err, dept) => {
-            if (err) console.log("NOT ABLE TO ADD THE DEPT!");
-            else if (dept) res.send("DEPT ALREADY EXISTS!");
-            else {
-                Department.create({
-                    title: req.body.title,
-                }, (err, dept) => {
-                    if (err) res.send("NOT ABLE TO ADD THE DEPT!");
-                    res.send("DEPT IS SUCCESSFULLY ADDED!");
-                });
-            }
+        const company_id = req.params.company_id;
+        const category_title = req.body.category_title;
+        const dept = new Department({ title: dept_title, company_id: company_id });
+        const category = new Category({ title: category_title, company_id: company_id });
+        dept.category.push(category);
+        Department.findOne({ title: dept_title }).populate('category').exec((err, dept) => {
+            if (err) res.send("NOT ABLE TO ADD DEPARTMENT!");
+            else res.send("DEPARTMENT IS SUCCESSFULLY ADDED!");
         });
+        // await Department.findOne({ title: dept_title }, (err, dept) => {
+        //     if (err) console.log("NOT ABLE TO ADD THE DEPT!");
+        //     else if (dept) res.send("DEPT ALREADY EXISTS!");
+        //     else {
+        //         Department.create({
+        //             title: req.body.title,
+        //             company_id: company_id
+        //         }, (err, dept) => {
+        //             if (err) res.send("NOT ABLE TO ADD THE DEPT!");
+        //             res.send("DEPT IS SUCCESSFULLY ADDED!");
+        //         });
+        //     }
+        // });
     } catch (err) {
         console.log(err);
     }

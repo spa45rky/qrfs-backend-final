@@ -8,10 +8,10 @@ const complaineeSchema = mongoose.Schema({
     },
     complaints: [{
         type: Object,
-        title: String,
-        description: String,
-        category: String,
-        status: String,
+        title: { type: String },
+        description: { type: String },
+        category: { type: String },
+        status: { type: String },
         assignedTo: [{
             ID: { type: String },
             username: { type: String },

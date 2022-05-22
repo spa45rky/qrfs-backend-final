@@ -27,7 +27,7 @@ admin_router.delete('/complaints/delete/:id', adminController.deleteSpecificComp
 // ADMIN DEPARTMENTS ROUTES
 admin_router.get('/depts', adminController.getDeptsList);
 admin_router.get('/depts/:id', adminController.getSpecificDept);
-admin_router.post('/deptsAdd', adminController.addSpecificDept);
+admin_router.post('/deptsAdd/:id', adminController.addSpecificDept);
 admin_router.put('/depts/update/:id', adminController.updateSpecificDept);
 admin_router.delete('/depts/delete/:id', adminController.deleteSpecificDept);
 

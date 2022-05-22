@@ -5,6 +5,19 @@ const Complainee = require('../models/complainee');
 const Dept = require('../models/department');
 const bcrypt = require('bcryptjs');
 
+
+exports.getAllCustomers = async(req, res) => {
+    try {
+        await Customer.find({}, (err, customers) => {
+            if (err) res.send("NOT ABLE TO GET CUSTOMERS LIST!");
+            else res.send(JSON.stringify(customers));
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
 exports.addCustomer = (req, res) => {
     try {
         let salt = bcrypt.genSaltSync(10);

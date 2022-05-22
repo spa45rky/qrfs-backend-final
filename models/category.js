@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const category_schema = mongoose.Schema({
     company_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Customer",
-        required: true
+        // ref: "Customer",
+        // required: true
     },
     title: {
         type: String,

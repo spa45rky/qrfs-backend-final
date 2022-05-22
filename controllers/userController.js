@@ -1,4 +1,6 @@
 const Complaint = require('../models/complaint');
+const User = require('../models/user');
+const Complainee = require('../models/complainee');
 
 exports.getAllComplaints = async(req, res) => {
     try {
@@ -18,17 +20,18 @@ exports.fileNewComplaint = (req, res) => {
         const title = req.body.title;
         const description = req.body.description;
         const category = "default";
-        const date_created = req.body.date;
-        const status = "pending";
-        // const user_id = req.body.id;
+        const date_created = new Date();
+        const status = "created";
+        const user_id = req.params.id;
         Complaint.create({
             title: title,
             description: description,
             category: category,
             dateCreated: date_created,
-            status: status
+            status: status,
+            user_id: user_id
         }, (err, complaint) => {
-            if (err) res.send("NOT ABLE TO FILE A COMPLAINT!");
+            if (err) res.send("NOT ABLE TO FILE A COMPLAINT! " + err);
             else res.send("COMPLAINT IS SUCCESSFULLY FILED!");
         });
     } catch (err) {
