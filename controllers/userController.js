@@ -3,6 +3,20 @@ const User = require('../models/user');
 const Complainee = require('../models/complainee');
 const Department = require('../models/department');
 const SP = require('../models/serviceProvider');
+const mongoose = require('mongoose');
+
+
+exports.deleteAll = (req, res) => {
+    try {
+        User.deleteMany({ company_id: mongoose.Types.ObjectId('6289146ae90ea3558cdb04ca') }).exec((err, result) => {
+            if (err) throw err;
+            else res.send("DELETED");
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 
 exports.getAllComplaints = async(req, res) => {
     try {
