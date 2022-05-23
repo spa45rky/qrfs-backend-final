@@ -449,16 +449,24 @@ exports.getAllDeptEmployees = (req, res) => {
                             else if (result == null) res.send("SERVICEPROVIDERS DO NOT EXIST!");
                             else {
                                 var index = 0;
-                                console.log("names: " + names + "\nemails: " + employees_email);
-                                const sps = result.map((res) => {
-                                    return {
-                                        ...res,
+                                const all_sps = [];
+                                result.forEach((res) => {
+                                    const obj = {
                                         name: names[index],
-                                        email: employees_email[index++]
+                                        email: employees_email[index],
+                                        feedbackGiven: res.feedbackGiven,
+                                        ratings: res.ratings,
+                                        user_id: res.user_id,
+                                        customer_id: res.company_id,
+                                        dept: res.department,
+                                        avgRating: res.averageRating,
+                                        assignedComplaints: res.assignedComplaints,
+                                        pfp: res.pfp || null
                                     }
-
+                                    index++;
+                                    all_sps.push(obj);
                                 });
-                                res.send(sps);
+                                res.send(all_sps);
                             }
                         });
                     }
