@@ -39,23 +39,24 @@ exports.fileNewComplaint = (req, res) => {
         const date_created = new Date();
         const company_id = mongoose.Types.ObjectId(req.params.id);
         const status = "FILED";
+        const complaint_obj = {
+            title: title,
+            description: description,
+            user_id: user_id,
+            company_id: company_id,
+            category: category.title,
+            status: status,
+            dateCreated: date_created,
+            workUpdate: "IN PROGRESS",
+            // media: media
+        };
         if (category !== 0) {
             if (category.assignedDepartment) {
                 const id = category.assignedDepartment;
                 Department.findOne({ _id: id }).exec((err, department) => {
                     if (err) res.send("NOT ABLE TO FIND THE DEPARTMENT!");
                     else if (department == null) {
-                        Complaint.create({
-                            title: title,
-                            description: description,
-                            user_id: user_id,
-                            company_id: company_id,
-                            category: category.title,
-                            status: status,
-                            dateCreated: date_created,
-                            workUpdate: "IN PROGRESS",
-                            // media: media
-                        }, (err, complaint) => {
+                        Complaint.create(complaint_obj, (err, complaint) => {
                             if (err) res.send("DEPARTMENT IS NULL AND NOT ABLE TO FILE THE COMPLAINT!");
                             else res.send("DEPARTMENT IS NULL AND COMPLAINT IS SUCCESSFULLY FILED!");
                         });
@@ -65,17 +66,7 @@ exports.fileNewComplaint = (req, res) => {
                             SP.find({ department: department._id }).exec((err, sps) => {
                                 if (err) res.send("NOT ABLE TO FIND THE SERVICEPROVIDERS!");
                                 else {
-                                    Complaint.create({
-                                        title: title,
-                                        description: description,
-                                        user_id: user_id,
-                                        company_id: company_id,
-                                        category: category.title,
-                                        status: status,
-                                        dateCreated: date_created,
-                                        workUpdate: "IN PROGRESS",
-                                        // media: media
-                                    }, (err, complaint) => {
+                                    Complaint.create(complaint_obj, (err, complaint) => {
                                         if (err) res.send("EMPLOYEES LEN IS ZERO AND NOT ABLE TO FILE THE COMPLAINT!");
                                         else {
                                             if (sps.length == 1) {
@@ -123,17 +114,7 @@ exports.fileNewComplaint = (req, res) => {
                                 }
                             })
                         } else {
-                            Complaint.create({
-                                title: title,
-                                description: description,
-                                user_id: user_id,
-                                company_id: company_id,
-                                category: category.title,
-                                status: status,
-                                dateCreated: date_created,
-                                workUpdate: "IN PROGRESS",
-                                // media: media
-                            }, (err, complaint) => {
+                            Complaint.create(complaint_obj, (err, complaint) => {
                                 if (err) res.send("EMPLOYEES LEN IS ZERO AND NOT ABLE TO FILE THE COMPLAINT!");
                                 else res.send("EMPLOYEES LEN IS ZERO AND COMPLAINT IS SUCCESSFULLY FILED!");
                             });
@@ -142,17 +123,7 @@ exports.fileNewComplaint = (req, res) => {
                 });
             }
         } else {
-            Complaint.create({
-                title: title,
-                description: description,
-                user_id: user_id,
-                company_id: company_id,
-                category: category.title,
-                status: status,
-                dateCreated: date_created,
-                workUpdate: "IN PROGRESS",
-                // media: media
-            }, (err, complaint) => {
+            Complaint.create(complaint_obj, (err, complaint) => {
                 if (err) res.send("CATEGORY IS ZERO AND NOT ABLE TO FILE THE COMPLAINT!");
                 else res.send("CATEGORY IS ZERO AND COMPLAINT IS SUCCESSFULLY FILED!");
             });
