@@ -412,7 +412,14 @@ exports.getAvailableDeptUnassigned = (req, res) => {
                             const obj = {
                                 name: names[index],
                                 email: emails[index],
-                                ...sp
+                                feedbackGiven: sp.feedbackGiven,
+                                ratings: sp.ratings,
+                                user_id: sp.user_id,
+                                customer_id: sp.company_id,
+                                dept: sp.department,
+                                avgRating: sp.averageRating,
+                                assignedComplaints: sp.assignedComplaints,
+                                pfp: sp.pfp || null
                             };
                             all_sps.push(obj);
                             index++;
