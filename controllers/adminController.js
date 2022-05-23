@@ -583,3 +583,16 @@ exports.getAllCategories = (req, res) => {
         console.log(err);
     }
 }
+
+exports.getUnassignedCategories = (req, res) => {
+    try {
+        const company_id = mongoose.Types.ObjectId(req.params.id);
+        Category.find({ company_id: company_id, assignedDepartment: null }).exec((err, categories) => {
+            if (err) res.send("NOT ABLE TO FIND ANY CATEGORY!");
+            else if (categories == null || categories.length == 0) res.send("CATEGORIES DO NOT EXIST!");
+            else res.send(categories);
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}

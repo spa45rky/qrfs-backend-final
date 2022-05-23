@@ -45,5 +45,6 @@ admin_router.post('/categories/add/:id', adminController.addCategory);
 admin_router.put('/categories/dept/add/:id', adminController.addCategoryDept);
 admin_router.delete('/categories/delete/:id', adminController.deleteCategory);
 admin_router.get('/categories/all/:id', adminController.getAllCategories);
+admin_router.get('/categories/unassigned/:id', adminController.getUnassignedCategories);
 
 module.exports = admin_router;
