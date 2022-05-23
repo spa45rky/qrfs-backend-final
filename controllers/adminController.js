@@ -394,6 +394,7 @@ exports.getAvailableDeptUnassigned = (req, res) => {
             if (err) res.send("NOT ABLE TO FIND THE SERVICEPROVIDERS!");
             else if (sps == null) res.send("SERVICEPROVIDERS DO NOT EXIST!");
             else {
+                // console.log("sps: " + sps);
                 const user_ids = [];
                 sps.forEach(sp => user_ids.push(sp.user_id));
                 User.find({ _id: { "$in": user_ids } }).exec((err, users) => {
@@ -444,7 +445,7 @@ exports.deleteDeptEmployee = (req, res) => {
                 Department.updateOne({ _id: dept_id }, { $pull: { employees: { _id: user._id } } }).exec((err, result) => {
                     if (err) res.send("NOT ABLE TO DELETE THE CUSTOMER FROM DEPARTMENT!");
                     else {
-                        SP.updateOne({ department: dept_id }, { $set: { department: null } }).exec((err, result) => {
+                        SP.updateOne({ user_id: user._id }, { $set: { department: null } }).exec((err, result) => {
                             if (err) res.send("EMPLOYEE IS REMOVED FROM THE DEPARTMENT BUT SERVICEPROVIDER DOES NOT UPDATED!");
                             else res.send("EMPLOYEE IS SUCCESSFULLY REMOVED FROM THE DEPARTMENT AND SERVICEPROVIDER IS UPDATED!");
                         });
