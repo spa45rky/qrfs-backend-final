@@ -21,6 +21,9 @@ const deptSchema = mongoose.Schema({
         // required: true 
     },
     employees: [{
+        _id: {
+            type: mongoose.Schema.Types.ObjectId
+        },
         email: {
             type: String
         }

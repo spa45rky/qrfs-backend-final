@@ -360,3 +360,24 @@ exports.deleteSpecificDept = (req, res) => {
         console.log(err);
     }
 }
+
+exports.deleteDeptEmployee = (req, res) => {
+    try {
+        const dept_id = req.params.dept_id;
+        const email = req.body.email;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+exports.getAllDeptEmployees = (req, res) => {
+    try {
+        const id = req.params.id;
+        Department.find({ _id: id }, 'employees').exec((err, employees) => {
+            if (err) res.send("NOT ABLE TO GET THE EMPLOYEES!");
+            else res.send(employees);
+        })
+    } catch (err) {
+        console.log(err);
+    }
+}
