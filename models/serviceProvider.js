@@ -24,6 +24,7 @@ const service_providers_schema = mongoose.Schema({
     }],
     department: {
         type: mongoose.Schema.Types.ObjectId,
+        default: null
     },
     ratings: [{
         type: Object,

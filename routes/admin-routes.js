@@ -30,7 +30,7 @@ admin_router.get('/depts/:id', adminController.getSpecificDept);
 admin_router.post('/deptsAdd/:id', adminController.addSpecificDept);
 admin_router.put('/depts/update/:id', adminController.updateSpecificDept);
 admin_router.delete('/depts/delete/:id', adminController.deleteSpecificDept);
-// admin_router.put('/depts/delete/employee/:id', adminController.deleteDeptEmployee);
+admin_router.put('/depts/delete/employee/:id', adminController.deleteDeptEmployee);
 admin_router.get('/depts/all/employees/:id', adminController.getAllDeptEmployees);
 admin_router.put('/depts/employee/add/:id', adminController.addDeptEmployee);
 

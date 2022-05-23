@@ -387,14 +387,28 @@ exports.addDeptEmployee = (req, res) => {
     }
 }
 
-// exports.deleteDeptEmployee = (req, res) => {
-//     try {
-//         const dept_id = req.params.dept_id;
-//         const email = req.body.email;
-//     } catch (err) {
-//         console.log(err);
-//     }
-// }
+exports.deleteDeptEmployee = (req, res) => {
+    try {
+        const dept_id = mongoose.Types.ObjectId(req.params.id);
+        const email = req.body.email;
+        User.findOne({ email: email }).exec((err, user) => {
+            if (err) res.send("NOT ABLE TO FIND THE USER!");
+            else {
+                Department.updateOne({ _id: dept_id }, { $pull: { employees: { _id: user._id } } }).exec((err, result) => {
+                    if (err) res.send("NOT ABLE TO DELETE THE CUSTOMER FROM DEPARTMENT!");
+                    else {
+                        SP.updateOne({ department: dept_id }, { $set: { department: null } }).exec((err, result) => {
+                            if (err) res.send("EMPLOYEE IS REMOVED FROM THE DEPARTMENT BUT SERVICEPROVIDER DOES NOT UPDATED!");
+                            else res.send("EMPLOYEE IS SUCCESSFULLY REMOVED FROM THE DEPARTMENT AND SERVICEPROVIDER IS UPDATED!");
+                        });
+                    }
+                });
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 exports.getAllDeptEmployees = (req, res) => {
     try {
