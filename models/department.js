@@ -13,7 +13,9 @@ const deptSchema = mongoose.Schema({
     //     ref: "Category"
     // }],
     category: [{
-        type: mongoose.Schema.Types.ObjectId,
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+        }
         // ref: "Category"
     }],
     company_id: {

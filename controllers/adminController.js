@@ -533,7 +533,8 @@ exports.addCategory = (req, res) => {
 exports.deleteCategory = (req, res) => {
     try {
         const id = mongoose.Types.ObjectId(req.params.id);
-        Category.findOneAndDelete({ company_id: id }).exec((err, category) => {
+        const category_id = mongoose.Types.ObjectId(req.body.id);
+        Category.findOneAndDelete({ _id: category_id, company_id: id }).exec((err, category) => {
             if (err) res.send("UNABLE TO DELETE THE CATEGORY!");
             else {
                 if (category.assignedDepartment) {
