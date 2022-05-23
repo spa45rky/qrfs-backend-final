@@ -568,3 +568,17 @@ exports.addCategoryDept = (req, res) => {
         console.log(err);
     }
 }
+
+
+exports.getAllCategories = (req, res) => {
+    try {
+        const company_id = mongoose.Types.ObjectId(req.params.id);
+        Category.find({ company_id: company_id }).exec((err, categories) => {
+            if (err) res.send("NOT ABLE TO FIND THE CATEGORY!");
+            else if (categories == null) res.send("CATEGORIES DON'T EXIST!");
+            else res.send(categories);
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
