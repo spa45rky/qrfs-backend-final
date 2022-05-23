@@ -533,7 +533,7 @@ exports.addCategory = (req, res) => {
 exports.deleteCategory = (req, res) => {
     try {
         const id = mongoose.Types.ObjectId(req.params.id);
-        Category.findByIdAndDelete({ company_id: id }).exec((err, category) => {
+        Category.findOneAndDelete({ company_id: id }).exec((err, category) => {
             if (err) res.send("UNABLE TO DELETE THE CATEGORY!");
             else {
                 if (category.assignedDepartment) {
@@ -545,6 +545,25 @@ exports.deleteCategory = (req, res) => {
                 } else res.send("CATEGORY IS SUCCESSFULLY DELETED!");
             }
         });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+exports.addCategoryDept = (req, res) => {
+    try {
+        const dept_id = mongoose.Types.ObjectId(req.params.id);
+        const category_id = mongoose.Types.ObjectId(req.body.id);
+        Category.findOneAndUpdate({ _id: category_id }, { assignedDepartment: dept_id }).exec((err, result) => {
+            if (err) res.send("NOT ABLE TO FIND THE CATEGORY!");
+            else {
+                Department.findByIdAndUpdate({ _id: dept_id }, { $push: { category: { _id: category_id } } }).exec((err, result) => {
+                    if (err) res.send("CATEGORY IS UPDATED BUT NOT ABLE TO UPDATE THE DEPT TABLE!");
+                    else res.send("CATEGORY IS SUCCESSFULLY ADDED TO THE DEPARTMENT AND UPDATED AS WELL!");
+                });
+            }
+        })
     } catch (err) {
         console.log(err);
     }
