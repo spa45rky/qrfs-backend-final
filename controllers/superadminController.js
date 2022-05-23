@@ -135,3 +135,11 @@ exports.deleteCustomer = (req, res) => {
         console.log("NOT ABLE TO DELETE THE CUSTOMER! " + err);
     }
 }
+
+exports.addAdmin = (req, res) => {
+    try {
+
+    } catch (err) {
+        console.log(err);
+    }
+}

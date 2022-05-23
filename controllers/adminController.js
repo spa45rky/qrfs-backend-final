@@ -50,7 +50,7 @@ exports.addSpecificUser = (req, res) => {
                     if (err) {
                         res.send("NOT ABLE TO ADD THE USER!" + err);
                     } else {
-                        Customer.updateOne({ _id: user.company_id }, { $push: { employees: { email: user.email } } }).exec((err, result) => {
+                        Customer.updateOne({ _id: user.company_id }, { $push: { employees: { email: user.email, _id: user._id } } }).exec((err, result) => {
                             if (err) res.send("NOT ABLE TO ADD THE USER'S EMAIL IN THE EMPLOYEES ARRAY!");
                             else {
                                 if (role == "COMPLAINEE") {
@@ -96,13 +96,41 @@ exports.updateSpecificUser = async(req, res) => {
     }
 }
 
-exports.deleteSpecificUser = async(req, res) => {
+exports.deleteSpecificUser = (req, res) => {
     try {
-        const user_id = req.params.id;
-        await User.findByIdAndDelete(user_id, (err, user) => {
+        const company_id = mongoose.Types.ObjectId(req.params.id);
+        const user_id = mongoose.Types.ObjectId(req.body.id);
+        User.findByIdAndDelete({ _id: user_id }).exec((err, user) => {
             if (err) res.send("NOT ABLE TO DELETE THE USER!");
-            else res.send("USER IS SUCCESSFULLY DELETED!");
-        });
+            else if (user == null) res.send("USER DOES NOT EXIST!");
+            else {
+                console.log("DELETED USER: " + JSON.stringify(user));
+                const userid = user._id;
+                console.log("DELETED USER ID: " + userid);
+                console.log("USER ID: " + user_id);
+                if (user.role == "COMPLAINEE") {
+                    Complainee.findOneAndDelete({ user_id: user._id }).exec((err, complainee) => {
+                        if (err) res.send("NOT ABLE TO DELETE THE COMPLAINEE!");
+                        else if (complainee == null) res.send("COMPLAINEE DOES NOT EXIST!");
+                    });
+                } else if (user.role == "SERVICEPROVIDER") {
+                    SP.findOneAndDelete({ user_id: user.id }).exec((err, sp) => {
+                        if (err) res.send("NOT ABLE TO DELETE THE SERVICEPROVIDER!");
+                        else if (sp == null) res.send("SERVICEPROVIDER DOES NOT EXIST!");
+                    });
+                }
+                Customer.findOne({ _id: company_id }).exec((err, customer) => {
+                    if (err) res.send("NOT ABLE TO DELETE USER FROM THE CUSTOMER TABLE!");
+                    else if (customer == null) res.send("CUSTOMER DOES NOT EXIST!");
+                    else {
+                        Customer.updateOne({ _id: customer._id }, { $pull: { employees: { _id: userid } } }).exec((err, result) => {
+                            if (err) res.send("NOT ABLE TO DELETE USER FROM THE CUSTOMER'S TABLE!");
+                            else res.send("USER IS SUCCESSFULLY DELETED FROM THE USER'S AND CUSTOMER'S TABLE!");
+                        });
+                    }
+                });
+            }
+        })
     } catch (err) {
         console.log(err);
     }
