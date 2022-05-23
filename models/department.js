@@ -12,10 +12,10 @@ const deptSchema = mongoose.Schema({
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: "Category"
     // }],
-    category: {
+    category: [{
         type: mongoose.Schema.Types.ObjectId,
         // ref: "Category"
-    },
+    }],
     company_id: {
         type: mongoose.Schema.Types.ObjectId,
         // required: true 
