@@ -33,7 +33,7 @@ admin_router.delete('/depts/delete/:id', adminController.deleteSpecificDept);
 admin_router.put('/depts/delete/employee/:id', adminController.deleteDeptEmployee);
 admin_router.get('/depts/all/employees/:id', adminController.getAllDeptEmployees);
 admin_router.put('/depts/employee/add/:id', adminController.addDeptEmployee);
-
+admin_router.get('/depts/unassigned/:id', adminController.getAvailableDeptUnassigned);
 // ADMIN PAYMENT ROUTES
 // admin_router.get('/payment', adminController.getPaymentInfo);
 // admin_router.put('/payment/update', adminController.updatePaymentInfo);

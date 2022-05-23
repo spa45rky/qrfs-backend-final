@@ -387,6 +387,19 @@ exports.addDeptEmployee = (req, res) => {
     }
 }
 
+exports.getAvailableDeptUnassigned = (req, res) => {
+    try {
+        const company_id = mongoose.Types.ObjectId(req.params.id);
+        SP.find({ company_id: company_id, department: null }).exec((err, sps) => {
+            if (err) res.send("NOT ABLE TO FIND THE SERVICEPROVIDERS!");
+            else if (sps == null) res.send("SERVICEPROVIDERS DO NOT EXIST!");
+            else res.send(sps);
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 exports.deleteDeptEmployee = (req, res) => {
     try {
         const dept_id = mongoose.Types.ObjectId(req.params.id);
@@ -413,9 +426,44 @@ exports.deleteDeptEmployee = (req, res) => {
 exports.getAllDeptEmployees = (req, res) => {
     try {
         const id = req.params.id;
-        Department.find({ _id: id }, 'employees').exec((err, employees) => {
+        Department.find({ _id: id }, 'employees').exec((err, result) => {
             if (err) res.send("NOT ABLE TO GET THE EMPLOYEES!");
-            else res.send(employees);
+            else {
+                const employees = result[0].employees;
+                var employees_email = [];
+                var sp_ids = [];
+                var names = [];
+                // var sps = [];
+                employees.forEach((employee) => { employees_email.push(employee.email); });
+                User.find({ email: { "$in": employees_email } }).exec((err, users) => {
+                    if (err) res.send("NOT ABLE TO FIND A SINGLE USER!");
+                    else if (users == null) res.send("USERS DON'T EXIST IN THIS DEPARTMENT!");
+                    else {
+                        users.forEach(user => {
+                            sp_ids.push(user._id);
+                            names.push(user.name);
+                        });
+                        console.log("sp_ids: " + sp_ids);
+                        SP.find({ user_id: { "$in": sp_ids } }).exec((err, result) => {
+                            if (err) res.send("NOT ABLE TO FIND THE SERVICEPROVIDERS!");
+                            else if (result == null) res.send("SERVICEPROVIDERS DO NOT EXIST!");
+                            else {
+                                var index = 0;
+                                console.log("names: " + names + "\nemails: " + employees_email);
+                                const sps = result.map((res) => {
+                                    return {
+                                        ...res,
+                                        name: names[index],
+                                        email: employees_email[index++]
+                                    }
+
+                                });
+                                res.send(sps);
+                            }
+                        });
+                    }
+                });
+            };
         })
     } catch (err) {
         console.log(err);
