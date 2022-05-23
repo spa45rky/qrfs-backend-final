@@ -40,10 +40,8 @@ exports.fileNewComplaint = (req, res) => {
         const company_id = mongoose.Types.ObjectId(req.params.id);
         const status = "FILED";
         if (category !== 0) {
-            console.log("assingedDept: " + category.assignedDepartment);
             if (category.assignedDepartment) {
                 const id = category.assignedDepartment;
-                console.log("id: " + id);
                 Department.findOne({ _id: id }).exec((err, department) => {
                     if (err) res.send("NOT ABLE TO FIND THE DEPARTMENT!");
                     else if (department == null) {
@@ -86,14 +84,12 @@ exports.fileNewComplaint = (req, res) => {
                                                     else res.send("COMPLAINT IS FILED SUCCESSFULLY AND SERVICEPROVIDER IS UPDATED!");
                                                 });
                                             } else {
-                                                // res.send(sps);
                                                 SP.findOne({ _id: sps[0]._id }, 'assignedComplaints averageRating', (err, sp_1) => {
                                                     if (err) res.send("NOT ABLE TO FIND THE SP[0] SERVICEPROVIDER!");
                                                     else {
                                                         SP.findOne({ _id: sps[1]._id }, 'assignedComplaints averageRating', (err, sp_2) => {
                                                             if (err) res.send("NOT ABLE TO FIND THE SP[1] SERVICEPROVIDER!");
                                                             else {
-                                                                // res.send("SP1: " + sp_1 + "\nSP2: " + sp_2);
                                                                 if (sp_1.assignedComplaints.length == sp_2.assignedComplaints.length) {
                                                                     if (sp_1.averageRating >= sp_2.averageRating) {
                                                                         SP.updateOne({ _id: sp_1._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
