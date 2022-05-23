@@ -271,10 +271,10 @@ exports.getDeptsList = (req, res) => {
     }
 }
 
-exports.getSpecificDept = async(req, res) => {
+exports.getSpecificDept = (req, res) => {
     try {
-        const dept_id = req.params.id;
-        await Department.findOne({ id: dept_id }, (err, dept) => {
+        const dept_id = mongoose.Types.ObjectId(req.params.id);
+        Department.findOne({ _id: dept_id }).exec((err, dept) => {
             if (err) res.send("DEPT DOES NOT EXIST!");
             else if (dept == null) res.send("DEPT NOT FOUND!");
             else res.send(dept);
