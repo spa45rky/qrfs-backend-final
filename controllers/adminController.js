@@ -7,6 +7,7 @@ const Complainee = require('../models/complainee');
 const SP = require('../models/serviceProvider');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+const user = require('../models/user');
 
 exports.getUsersList = (req, res) => {
     try {
@@ -361,14 +362,39 @@ exports.deleteSpecificDept = (req, res) => {
     }
 }
 
-exports.deleteDeptEmployee = (req, res) => {
+exports.addDeptEmployee = (req, res) => {
     try {
-        const dept_id = req.params.dept_id;
         const email = req.body.email;
+        const dept_id = mongoose.Types.ObjectId(req.params.id);
+        User.findOne({ email: email }).exec((err, user) => {
+            if (err) res.send("NOT ABLE TO FIND THE EMPLOYEE/USER!");
+            else if (user == null) res.send("USER/EMPLOYEE DOESN'T EXIST!");
+            else {
+                const sp_id = mongoose.Types.ObjectId(user._id);
+                Department.updateOne({ _id: dept_id }, { $push: { employees: { _id: sp_id, email: email } } }).exec((err, result) => {
+                    if (err) res.send("NOT ABLE TO ADD USER/EMPLOYEE IN THE EMPLOYEES ARRAY OF DEPARTMENT!");
+                    else {
+                        SP.updateOne({ user_id: sp_id }, { department: dept_id }).exec((err, result) => {
+                            if (err) res.send("NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
+                            else res.send("EMPLOYEE/USER IS SUCCESSFULLY ADDED TO THE DEPARTMENT AND SERVICEPROVIDER IS UPDATED!");
+                        });
+                    }
+                });
+            }
+        })
     } catch (err) {
         console.log(err);
     }
 }
+
+// exports.deleteDeptEmployee = (req, res) => {
+//     try {
+//         const dept_id = req.params.dept_id;
+//         const email = req.body.email;
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
 
 exports.getAllDeptEmployees = (req, res) => {
     try {
