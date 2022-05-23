@@ -64,7 +64,8 @@ exports.addSpecificUser = (req, res) => {
                                 } else if (role == "SERVICEPROVIDER") {
                                     SP.create({
                                         user_id: user._id,
-                                        company_id: user.company_id
+                                        company_id: user.company_id,
+                                        averageRating: 0
                                     }, (err, result) => {
                                         if (err) res.send(err);
                                         else res.send("BOTH USER AND SERVICEPROVIDER ARE CREATED!");
