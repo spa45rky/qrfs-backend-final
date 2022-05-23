@@ -511,3 +511,40 @@ exports.getAllDeptEmployees = (req, res) => {
         console.log(err);
     }
 }
+
+exports.addCategory = (req, res) => {
+    try {
+        const company_id = mongoose.Types.ObjectId(req.params.id);
+        const title = req.body.title;
+        Category.create({
+            company_id: company_id,
+            title: title,
+            assignedDepartment: null
+        }, (err, category) => {
+            if (err) res.send("UNABLE TO CREATE THE CATEGORY!");
+            else res.send("CATEGORY IS SUCCESSFULLY CREATED!");
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+exports.deleteCategory = (req, res) => {
+    try {
+        const id = mongoose.Types.ObjectId(req.params.id);
+        Category.findByIdAndDelete({ company_id: id }).exec((err, category) => {
+            if (err) res.send("UNABLE TO DELETE THE CATEGORY!");
+            else {
+                if (category.assignedDepartment) {
+                    const dept_id = category.assignedDepartment._id;
+                    Department.updateOne({ _id: dept_id }, { $pull: { category: { _id: category._id } } }).exec((err, result) => {
+                        if (err) res.send("CATEGORY IS DELETED BUT DEPARTMENT ISN'T UPDATED!");
+                        else res.send("CATEGORY IS SUCCESSFULLY DELETED AND DEPARTMENT IS SUCCESSFULLY UPDATED!");
+                    });
+                } else res.send("CATEGORY IS SUCCESSFULLY DELETED!");
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}

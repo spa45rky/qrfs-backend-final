@@ -34,10 +34,16 @@ admin_router.put('/depts/delete/employee/:id', adminController.deleteDeptEmploye
 admin_router.get('/depts/all/employees/:id', adminController.getAllDeptEmployees);
 admin_router.put('/depts/employee/add/:id', adminController.addDeptEmployee);
 admin_router.get('/depts/unassigned/:id', adminController.getAvailableDeptUnassigned);
+
 // ADMIN PAYMENT ROUTES
 // admin_router.get('/payment', adminController.getPaymentInfo);
 // admin_router.put('/payment/update', adminController.updatePaymentInfo);
 // admin_router.put('/payment/addons', adminController.addServices);
 // admin_router.post('/payment/rewards', adminController.addRewards);
+
+admin_router.post('/categories/add/:id', adminController.addCategory);
+// admin_router.put('/categories/dept/add/:id', adminController.addCategoryDept/
+admin_router.delete('/categories/delete/:id', adminController.deleteCategory);
+// admin_router.delete('/categories/dept/delete/:id', adminController.deleteCategoryDept);
 
 module.exports = admin_router;
