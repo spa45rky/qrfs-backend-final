@@ -393,7 +393,34 @@ exports.getAvailableDeptUnassigned = (req, res) => {
         SP.find({ company_id: company_id, department: null }).exec((err, sps) => {
             if (err) res.send("NOT ABLE TO FIND THE SERVICEPROVIDERS!");
             else if (sps == null) res.send("SERVICEPROVIDERS DO NOT EXIST!");
-            else res.send(sps);
+            else {
+                const user_ids = [];
+                sps.forEach(sp => user_ids.push(sp.user_id));
+                User.find({ _id: { "$in": user_ids } }).exec((err, users) => {
+                    if (err) res.send("NOT ABLE TO FIND ANY USER!");
+                    else if (users == null) res.send("USERS DO NOT EXIST!");
+                    else {
+                        const names = [];
+                        const emails = [];
+                        users.forEach(user => {
+                            names.push(user.name);
+                            emails.push(user.email);
+                        });
+                        const all_sps = [];
+                        var index = 0;
+                        sps.forEach(sp => {
+                            const obj = {
+                                name: names[index],
+                                email: emails[index],
+                                ...sp
+                            };
+                            all_sps.push(obj);
+                            index++;
+                        });
+                        res.send(all_sps);
+                    }
+                })
+            }
         });
     } catch (err) {
         console.log(err);
