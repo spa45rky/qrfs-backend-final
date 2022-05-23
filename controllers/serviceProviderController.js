@@ -1,10 +1,11 @@
-const ServiceProvider = require('../models/serviceProvider');
+const SP = require('../models/serviceProvider');
 const Complaint = require('../models/complaint');
+const mongoose = require('mongoose');
 
 exports.getAssignedComplaints = (req, res) => {
     try {
         const sp_id = req.params.id;
-        ServiceProvider.find({ _id: sp_id }).select('assignedComplaints').exec((err, assignedComplaints) => {
+        SP.find({ _id: sp_id }).select('assignedComplaints').exec((err, assignedComplaints) => {
             if (err) res.send("NOT ABLE TO GET THE ASSIGNED COMPLAINTS!");
             else res.send(assignedComplaints);
         });
@@ -14,21 +15,14 @@ exports.getAssignedComplaints = (req, res) => {
     }
 }
 
-exports.updateComplaint = async(req, res) => {
+exports.updateComplaint = (req, res) => {
     try {
-        const sp_id = req.params.sp_id;
-        const c_id = req.params.c_id;
-        const update = req.body.update;
-        const query = { _id: sp_id, assignedComplaints: { c_id: c_id } };
-        await ServiceProvider.findOneAndUpdate(query, { workUpdate: update }, async(err, result) => {
-            if (err) res.send("SA ISN'T ABLE TO UPDATE THE COMPLAINT!");
-            else if (result == null) res.send("COMPLAINT DOES NOT EXIST!");
-            else {
-                await Complaint.findOneAndUpdate({ _id: c_id }, { workUpdate: update }, (err, result) => {
-                    if (err) res.send("NOT ABLE TO UPDATE THE COMPLAINT!");
-                    else res.send("COMPALINT IS SUCCESSFULLY UPDATED!");
-                });
-            }
+        const status = req.body.status;
+        const workUpdate = req.body.workUpdate;
+        const id = mongoose.Types.ObjectId(req.params.id);
+        Complaint.updateOne({ _id: id }, { status: status, workUpdate: workUpdate }).exec((err, complaint) => {
+            if (err) res.send("SERVICEPROVIDER ISN'T ABLE TO UPDATE THE COMPLAINT!");
+            else res.send("SERVICEPROVIDER HAS SUCCESSFULLY UPDATED THE COMPLAINT!");
         });
     } catch (err) {
         console.log(err);
@@ -41,7 +35,7 @@ exports.resolveComplaint = async(req, res) => {
         const c_id = req.params.c_id;
         const status = req.body.status;
         const query = { _id: sp_id, assignedComplaints: { c_id: c_id } };
-        await ServiceProvider.findOneAndUpdate(query, { status: status }, async(err, result) => {
+        await SP.findOneAndUpdate(query, { status: status }, async(err, result) => {
             if (err) res.send("SA ISN'T ABLE TO UPDATE THE COMPLAINT!");
             else if (result == null) res.send("COMPLAINT DOES NOT EXIST!");
             else {
@@ -62,11 +56,11 @@ exports.transferComplaint = async(req, res) => {
         const c_id = req.params.c_id;
         const t_id = req.params.t_id;
         const query = { _id: sp_id, assignedComplaints: { c_id: c_id } };
-        ServiceProvider.findOneAndDelete(query, async(err, result) => {
+        SP.findOneAndDelete(query, async(err, result) => {
             if (err) res.send("SA ISN'T ABLE TO DELETE THE COMPLAINT!");
             else if (result == null) res.send("COMPLAINT DOES NOT EXIST!");
             else {
-                await ServiceProvider.findOneAndUpdate({ _id: t_id }, { assignedComplaints: { c_id: result.c_id } },
+                await SP.findOneAndUpdate({ _id: t_id }, { assignedComplaints: { c_id: result.c_id } },
                     async(err, complaint) => {
                         if (err)
                             if (err) res.send("SA ISN'T ABLE TO TRANSFER THE COMPLAINT!");

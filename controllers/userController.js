@@ -112,7 +112,7 @@ exports.fileNewComplaint = (req, res) => {
                                         }
                                     });
                                 }
-                            })
+                            });
                         } else {
                             Complaint.create(complaint_obj, (err, complaint) => {
                                 if (err) res.send("EMPLOYEES LEN IS ZERO AND NOT ABLE TO FILE THE COMPLAINT!");
