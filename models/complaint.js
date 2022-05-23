@@ -45,10 +45,14 @@ const complaintSchema = mongoose.Schema({
         type: Date
     },
     status: { type: String },
-    assignedTo: [{
+    // assignedTo: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'ServiceProvider'
+    // }],
+    assignedTo: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ServiceProvider'
-    }],
+        // ref: 'ServiceProvider'
+    },
     // geolocation: {
     //     latitude: { type: Number },
     //     longitude: { type: Number }

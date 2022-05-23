@@ -273,7 +273,7 @@ exports.getDeptsList = (req, res) => {
 
 exports.getSpecificDept = async(req, res) => {
     try {
-        const dept_id = req.query.id;
+        const dept_id = req.params.id;
         await Department.findOne({ id: dept_id }, (err, dept) => {
             if (err) res.send("DEPT DOES NOT EXIST!");
             else if (dept == null) res.send("DEPT NOT FOUND!");

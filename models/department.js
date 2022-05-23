@@ -8,10 +8,14 @@ const deptSchema = mongoose.Schema({
         max: [10, "TITLE CAN'T EXCEED 10 CHARACTERS!"],
     },
     // complaints: { type: complaintsSchema },
-    category: [{
+    // category: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Category"
+    // }],
+    category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Category"
-    }],
+        // ref: "Category"
+    },
     company_id: {
         type: mongoose.Schema.Types.ObjectId,
         // required: true 

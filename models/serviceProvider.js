@@ -9,8 +9,10 @@ const service_providers_schema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
     },
     assignedComplaints: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Complaint"
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+        }
+        // ref: "Complaint"
     }],
     feedbackGiven: [{
         type: Object,
