@@ -138,7 +138,43 @@ exports.deleteCustomer = (req, res) => {
 
 exports.addAdmin = (req, res) => {
     try {
+        let salt = bcrypt.genSaltSync(10);
+        const email = req.body.email;
+        const company_id = mongoose.Types.ObjectId(req.params.id);
+        User.create({
+            name: 'UNDEFINED',
+            email: email,
+            password: bcrypt.hashSync('admin', salt),
+            role: 'ADMIN',
+            sign_type: 'PLATFORM',
+            company_id: company_id
+        }, (err, user) => {
+            if (err) res.send('NOT ABLE TO ADD AMDIN!');
+            else {
+                Customer.findOneAndUpdate({ _id: company_id }, { $push: { employees: { email: email, _id: user._id } } }).exec((err, result) => {
+                    if (err) res.send('NOT ABLE TO ADD THE ADMIN CUSTOMER\'S TABLE');
+                    else res.send("ADMIN IS SUCCESSFULLY CREATED AND CUSTOMER IS SUCCESSFULLY UPDATED!");
+                })
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
 
+exports.deleteAdmin = (req, res) => {
+    try {
+        const admin_id = mongoose.Types.ObjectId(req.params.id);
+        User.findByIdAndDelete({ _id: admin_id }).exec((err, user) => {
+            if (err) res.send("NOT ABLE TO DELETE THE USER!");
+            else if (user == null) res.send("ADMIN DOES NOT EXIST!");
+            else {
+                Customer.updateOne({ _id: user.company_id }, { $pull: { employees: { _id: user._id } } }).exec((err, customer) => {
+                    if (err) res.send("NOT ABLE TO REMOVE ADMIN FROM THE CUSTOMER'S TABLE!");
+                    else res.send("ADMIN IS SUCCESSFULLY REMOVED FROM THE USER'S AND CUSTOMER'S TABLE!");
+                });
+            }
+        })
     } catch (err) {
         console.log(err);
     }

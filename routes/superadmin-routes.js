@@ -9,6 +9,7 @@ superadmin_router.delete('/customers/delete/:id', superadminController.deleteCus
 superadmin_router.put('/customers/update/:id', superadminController.editCustomer);
 
 // SUPERADMIN ADMIN ROUTES
-superadmin_router.post('/admins/add', superadminController.addAdmin);
+superadmin_router.post('/admins/add/:id', superadminController.addAdmin);
+superadmin_router.delete('/admins/delete/:id', superadminController.deleteAdmin);
 
 module.exports = superadmin_router;
