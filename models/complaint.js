@@ -54,7 +54,7 @@ const complaintSchema = mongoose.Schema({
     // }],
     assignedTo: [{
         _id: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
         }
         // ref: "Category"
     }],
