@@ -52,10 +52,12 @@ const complaintSchema = mongoose.Schema({
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'ServiceProvider'
     // }],
-    assignedTo: {
-        type: mongoose.Schema.Types.ObjectId,
+    assignedTo: [{
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+        }
         // ref: 'ServiceProvider'
-    },
+    }],
     // geolocation: {
     //     latitude: { type: Number },
     //     longitude: { type: Number }
