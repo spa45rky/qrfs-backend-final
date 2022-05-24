@@ -10,16 +10,19 @@ const complaineeSchema = mongoose.Schema({
         // required: true
     },
     complaints: [{
-        type: Object,
-        title: { type: String },
-        description: { type: String },
-        category: { type: String },
-        status: { type: String },
-        assignedTo: [{
-            ID: { type: String },
-            username: { type: String },
-            email: { type: String },
-        }],
+        // type: Object,
+        // title: { type: String },
+        // description: { type: String },
+        // category: { type: String },
+        // status: { type: String },
+        // assignedTo: [{
+        //     ID: { type: String },
+        //     username: { type: String },
+        //     email: { type: String },
+        // }],
+        _id: {
+            type: mongoose.Schema.Types.ObjectId
+        }
     }],
     feedback: [{
         type: Object,

@@ -58,7 +58,12 @@ exports.fileNewComplaint = (req, res) => {
                     else if (department == null) {
                         Complaint.create(complaint_obj, (err, complaint) => {
                             if (err) res.send("DEPARTMENT IS NULL AND NOT ABLE TO FILE THE COMPLAINT!");
-                            else res.send("DEPARTMENT IS NULL AND COMPLAINT IS SUCCESSFULLY FILED!");
+                            else {
+                                Complainee.updateOne({ user_id: user_id }, { $push: { complaints: { _id: complaint._id } } }).exec((err, complainee) => {
+                                    if (err) res.send("COMPALINT IS CREATED BUT COMPALINEE IS NOT UPDATED!");
+                                    else res.send("COMPALINT IS CREATED AND COMPALINEE IS UPDATED!");
+                                });
+                            }
                         });
                     } else {
                         const employees = department.employees;
@@ -69,46 +74,51 @@ exports.fileNewComplaint = (req, res) => {
                                     Complaint.create(complaint_obj, (err, complaint) => {
                                         if (err) res.send("EMPLOYEES LEN IS ZERO AND NOT ABLE TO FILE THE COMPLAINT!");
                                         else {
-                                            if (sps.length == 1) {
-                                                SP.updateOne({ _id: sps[0]._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, sp) => {
-                                                    if (err) res.send("COMPLAINT IS FILED SUCCESSFULLY BUT THE SERVICEPROVIDER ISN'T UPDATED!");
-                                                    else res.send("COMPLAINT IS FILED SUCCESSFULLY AND SERVICEPROVIDER IS UPDATED!");
-                                                });
-                                            } else {
-                                                SP.findOne({ _id: sps[0]._id }, 'assignedComplaints averageRating', (err, sp_1) => {
-                                                    if (err) res.send("NOT ABLE TO FIND THE SP[0] SERVICEPROVIDER!");
-                                                    else {
-                                                        SP.findOne({ _id: sps[1]._id }, 'assignedComplaints averageRating', (err, sp_2) => {
-                                                            if (err) res.send("NOT ABLE TO FIND THE SP[1] SERVICEPROVIDER!");
+                                            Complainee.updateOne({ user_id: user_id }, { $push: { complaints: { _id: complaint._id } } }).exec((err, complainee) => {
+                                                if (err) res.send("COMPALINT IS CREATED BUT COMPALINEE IS NOT UPDATED!");
+                                                else {
+                                                    if (sps.length == 1) {
+                                                        SP.updateOne({ _id: sps[0]._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, sp) => {
+                                                            if (err) res.send("COMPLAINT IS FILED SUCCESSFULLY BUT THE SERVICEPROVIDER ISN'T UPDATED!");
+                                                            else res.send("COMPLAINT IS FILED SUCCESSFULLY AND SERVICEPROVIDER IS UPDATED!");
+                                                        });
+                                                    } else {
+                                                        SP.findOne({ _id: sps[0]._id }, 'assignedComplaints averageRating', (err, sp_1) => {
+                                                            if (err) res.send("NOT ABLE TO FIND THE SP[0] SERVICEPROVIDER!");
                                                             else {
-                                                                if (sp_1.assignedComplaints.length == sp_2.assignedComplaints.length) {
-                                                                    if (sp_1.averageRating >= sp_2.averageRating) {
-                                                                        SP.updateOne({ _id: sp_1._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
-                                                                            if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
-                                                                            else res.send("COMPLAINT IS SUCCESSFULLY FILLED AND SERVICEPROVIDER IS UPDATED!");
-                                                                        });
-                                                                    } else {
-                                                                        SP.updateOne({ _id: sp_2._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
-                                                                            if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
-                                                                            else res.send("COMPLAINT IS SUCCESSFULLY FILLED AND SERVICEPROVIDER IS UPDATED!");
-                                                                        });
+                                                                SP.findOne({ _id: sps[1]._id }, 'assignedComplaints averageRating', (err, sp_2) => {
+                                                                    if (err) res.send("NOT ABLE TO FIND THE SP[1] SERVICEPROVIDER!");
+                                                                    else {
+                                                                        if (sp_1.assignedComplaints.length == sp_2.assignedComplaints.length) {
+                                                                            if (sp_1.averageRating >= sp_2.averageRating) {
+                                                                                SP.updateOne({ _id: sp_1._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
+                                                                                    if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
+                                                                                    else res.send("COMPLAINT IS SUCCESSFULLY FILLED AND SERVICEPROVIDER IS UPDATED!");
+                                                                                });
+                                                                            } else {
+                                                                                SP.updateOne({ _id: sp_2._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
+                                                                                    if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
+                                                                                    else res.send("COMPLAINT IS SUCCESSFULLY FILLED AND SERVICEPROVIDER IS UPDATED!");
+                                                                                });
+                                                                            }
+                                                                        } else if (sp_1.assignedComplaints.length < sp_2.assignedComplaints.length) {
+                                                                            SP.updateOne({ _id: sp_1._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
+                                                                                if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
+                                                                                else res.send("COMPLAINT IS SUCCESSFULLY FILLED AND SERVICEPROVIDER IS UPDATED!");
+                                                                            });
+                                                                        } else {
+                                                                            SP.updateOne({ _id: sp_2._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
+                                                                                if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
+                                                                                else res.send("COMPLAINT IS SUCCESSFULLY FILLED AND SERVICEPROVIDER IS UPDATED!");
+                                                                            });
+                                                                        }
                                                                     }
-                                                                } else if (sp_1.assignedComplaints.length < sp_2.assignedComplaints.length) {
-                                                                    SP.updateOne({ _id: sp_1._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
-                                                                        if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
-                                                                        else res.send("COMPLAINT IS SUCCESSFULLY FILLED AND SERVICEPROVIDER IS UPDATED!");
-                                                                    });
-                                                                } else {
-                                                                    SP.updateOne({ _id: sp_2._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
-                                                                        if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
-                                                                        else res.send("COMPLAINT IS SUCCESSFULLY FILLED AND SERVICEPROVIDER IS UPDATED!");
-                                                                    });
-                                                                }
+                                                                });
                                                             }
                                                         });
                                                     }
-                                                });
-                                            }
+                                                }
+                                            });
                                         }
                                     });
                                 }
@@ -116,7 +126,10 @@ exports.fileNewComplaint = (req, res) => {
                         } else {
                             Complaint.create(complaint_obj, (err, complaint) => {
                                 if (err) res.send("EMPLOYEES LEN IS ZERO AND NOT ABLE TO FILE THE COMPLAINT!");
-                                else res.send("EMPLOYEES LEN IS ZERO AND COMPLAINT IS SUCCESSFULLY FILED!");
+                                Complainee.updateOne({ user_id: user_id }, { $push: { complaints: { _id: complaint._id } } }).exec((err, complainee) => {
+                                    if (err) res.send("COMPALINT IS CREATED BUT COMPALINEE IS NOT UPDATED!");
+                                    else res.send("EMPLOYEES LENGTH IS ZERO AND COMPLAINT IS SUCCESSFULLY FILED!");
+                                });
                             });
                         }
                     }
