@@ -83,12 +83,14 @@ exports.transferComplaint = (req, res) => {
                         SP.updateOne({ _id: sp_2 }, { $push: { assignedComplaints: { _id: complaint_id } } }).exec((err, sp) => {
                             if (err) res.send("NOT ABLE TO UPDATE THE SP_2!");
                             else {
-                                Complaint.updateOne({ _id: complaint_id }, {
-                                    $pull: { assignedTo: { _id: sp_1 } },
-                                    $push: { assignedTo: { _id: sp_2 } }
-                                }).exec((err, result) => {
-                                    if (err) res.send("NOT ABLE TO TRANSFER THE COMPLAINT!");
-                                    else res.send("COMPLAINT IS SUCCESSFULLY TRANSFERRED!");
+                                Complaint.updateOne({ _id: complaint_id }, { $pull: { assignedTo: { _id: sp_1 } } }).exec((err, result) => {
+                                    if (err) res.send("NOT ABLE TO REMOVE SP_1 FROM ASSIGNEDTO ARRAY!");
+                                    else {
+                                        Complaint.updateOne({ _id: complaint_id }, { $push: { assignedTo: { _id: sp_2 } } }).exec((err, result) => {
+                                            if (err) res.send("NOT ABLE TO ADD SP_2 IN ASSIGNEDTO ARRAY!1");
+                                            else res.send("COMPLAINT IS SUCCESSFULLY TRANSFERRED!");
+                                        });
+                                    }
                                 });
                             }
                         });
