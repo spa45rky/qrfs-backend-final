@@ -33,7 +33,7 @@ exports.fileNewComplaint = (req, res) => {
     try {
         const title = req.body.title;
         const description = req.body.description;
-        const user_id = mongoose.Types.ObjectId(req.body.id);
+        const user_id = mongoose.Types.ObjectId(req.body.user_id);
         const category = req.body.category; // complete object
         // const media = req.body.media;
         const date_created = new Date();
