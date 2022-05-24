@@ -2,6 +2,18 @@ const SP = require('../models/serviceProvider');
 const Complaint = require('../models/complaint');
 const mongoose = require('mongoose');
 
+exports.getSpecificSP = (req, res) => {
+    try {
+        const user_id = mongoose.Types.ObjectId(req.params.id);
+        SP.findOne({ user_id: user_id }).exec((err, sp) => {
+            if (err) res.send("NOT ABLE TO FIND THE SERVICEPROVIDER!");
+            else res.send(sp);
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 exports.getAssignedComplaints = (req, res) => {
     try {
         const sp_id = mongoose.Types.ObjectId(req.params.id);
@@ -12,7 +24,7 @@ exports.getAssignedComplaints = (req, res) => {
                 Complaint.find({ _id: { "$in": complaint_ids } }).exec((err, result) => {
                     if (err) res.send("NOT ABLE TO FIND ANY COMPLAINT!");
                     else res.send(result);
-                })
+                });
             }
         });
 
