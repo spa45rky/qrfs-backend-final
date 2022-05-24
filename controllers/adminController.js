@@ -344,6 +344,24 @@ exports.updateSpecificDept = async(req, res) => {
     }
 }
 
+// exports.deleteSpecificDept = (req, res) => {
+//     try {
+//         const dept_id = mongoose.Types.ObjectId(req.params.id);
+//         Department.findByIdAndDelete({ _id: dept_id }).exec((err, dept) => {
+//             if (err) res.send("NOT ABLE TO DELETE THE DEPT!");
+//             else if (dept == null) res.send("DEPT NOT FOUND!");
+//             else {
+//                 Customer.updateOne({ _id: dept.company_id }, { $pull: { departments: { _id: dept_id } } }).exec((err, result) => {
+//                     if (err) res.send("NOT ABLE TO DELETE DEPARTMENTS FROM THE CUSTOMER'S TABLE!");
+//                     else res.send("DEPARTMENT IS SUCCESSFULLY DELETED FROM THE DEPARTMENT'S AND CUSTOMER'S TABLE!");
+//                 });
+//             }
+//         });
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
+
 exports.deleteSpecificDept = (req, res) => {
     try {
         const dept_id = mongoose.Types.ObjectId(req.params.id);
@@ -353,7 +371,17 @@ exports.deleteSpecificDept = (req, res) => {
             else {
                 Customer.updateOne({ _id: dept.company_id }, { $pull: { departments: { _id: dept_id } } }).exec((err, result) => {
                     if (err) res.send("NOT ABLE TO DELETE DEPARTMENTS FROM THE CUSTOMER'S TABLE!");
-                    else res.send("DEPARTMENT IS SUCCESSFULLY DELETED FROM THE DEPARTMENT'S AND CUSTOMER'S TABLE!");
+                    else {
+                        Category.updateOne({ assignedDepartment: dept._id }, { assignedDepartment: null }).exec((err, result) => {
+                            if (err) res.send("NOT ABLE TO DELETE DEPARTMENTS FROM THE CATEGORIES TABLE'");
+                            else {
+                                SP.updateOne({ department: dept._id }, { department: null }).exec((err, result) => {
+                                    if (err) res.send("NOT ABLE TO DELETE DEPARTMENTS FROM THE SERVICEPROVIDER'S TABLE!");
+                                    else res.send("DEPARTMENT IS NO MORE WITH US!");
+                                });
+                            }
+                        });
+                    }
                 });
             }
         });
@@ -361,6 +389,8 @@ exports.deleteSpecificDept = (req, res) => {
         console.log(err);
     }
 }
+
+
 
 exports.addDeptEmployee = (req, res) => {
     try {
