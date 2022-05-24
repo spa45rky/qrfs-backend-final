@@ -81,7 +81,7 @@ exports.fileNewComplaint = (req, res) => {
                                                         SP.updateOne({ _id: sps[0]._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, sp) => {
                                                             if (err) res.send("COMPLAINT IS FILED SUCCESSFULLY BUT THE SERVICEPROVIDER ISN'T UPDATED!");
                                                             else {
-                                                                Complaint.updateOne({ _id: complaint._id }, { $push: { assignedTo: { _id: sps[0]._id } } }).exec((err, result) => {
+                                                                Complaint.updateOne({ _id: complaint._id }, { status: "ASSIGNED", $push: { assignedTo: { _id: sps[0]._id } } }).exec((err, result) => {
                                                                     if (err) res.send("COMPLAINT IS FILED SUCCESSFULLY BUT NOT ABLE TO ASSIGN TO THE SERVICEPROVIDER!");
                                                                     else res.send("COMPLAINT IS FILED SUCCESSFULLY AND SUCCESSFULLY ASSIGEND TO THE SERVICEPROVIDER!");
                                                                 });
@@ -99,7 +99,7 @@ exports.fileNewComplaint = (req, res) => {
                                                                                 SP.updateOne({ _id: sp_1._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
                                                                                     if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
                                                                                     else {
-                                                                                        Complaint.updateOne({ _id: complaint._id }, { $push: { assignedTo: { _id: sp_1._id } } }).exec((err, result) => {
+                                                                                        Complaint.updateOne({ _id: complaint._id }, { status: "ASSIGNED", $push: { assignedTo: { _id: sp_1._id } } }).exec((err, result) => {
                                                                                             if (err) res.send("COMPLAINT IS FILED SUCCESSFULLY BUT NOT ABLE TO ASSIGN TO THE SERVICEPROVIDER!");
                                                                                             else res.send("COMPLAINT IS FILED SUCCESSFULLY AND SUCCESSFULLY ASSIGEND TO THE SERVICEPROVIDER!");
                                                                                         });
@@ -109,7 +109,7 @@ exports.fileNewComplaint = (req, res) => {
                                                                                 SP.updateOne({ _id: sp_2._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
                                                                                     if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
                                                                                     else {
-                                                                                        Complaint.updateOne({ _id: complaint._id }, { $push: { assignedTo: { _id: sp_2._id } } }).exec((err, result) => {
+                                                                                        Complaint.updateOne({ _id: complaint._id }, { status: "ASSIGNED", $push: { assignedTo: { _id: sp_2._id } } }).exec((err, result) => {
                                                                                             if (err) res.send("COMPLAINT IS FILED SUCCESSFULLY BUT NOT ABLE TO ASSIGN TO THE SERVICEPROVIDER!");
                                                                                             else res.send("COMPLAINT IS FILED SUCCESSFULLY AND SUCCESSFULLY ASSIGEND TO THE SERVICEPROVIDER!");
                                                                                         });
@@ -120,7 +120,7 @@ exports.fileNewComplaint = (req, res) => {
                                                                             SP.updateOne({ _id: sp_1._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
                                                                                 if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
                                                                                 else {
-                                                                                    Complaint.updateOne({ _id: complaint._id }, { $push: { assignedTo: { _id: sp_1._id } } }).exec((err, result) => {
+                                                                                    Complaint.updateOne({ _id: complaint._id }, { status: "ASSIGNED", $push: { assignedTo: { _id: sp_1._id } } }).exec((err, result) => {
                                                                                         if (err) res.send("COMPLAINT IS FILED SUCCESSFULLY BUT NOT ABLE TO ASSIGN TO THE SERVICEPROVIDER!");
                                                                                         else res.send("COMPLAINT IS FILED SUCCESSFULLY AND SUCCESSFULLY ASSIGEND TO THE SERVICEPROVIDER!");
                                                                                     });
@@ -130,7 +130,7 @@ exports.fileNewComplaint = (req, res) => {
                                                                             SP.updateOne({ _id: sp_2._id }, { $push: { assignedComplaints: { _id: complaint._id } } }).exec((err, result) => {
                                                                                 if (err) res.send("COMPLAINT IS SUCCESSFULLY FILLED BUT NOT ABLE TO UPDATE THE SERVICEPROVIDER!");
                                                                                 else {
-                                                                                    Complaint.updateOne({ _id: complaint._id }, { $push: { assignedTo: { _id: sp_2._id } } }).exec((err, result) => {
+                                                                                    Complaint.updateOne({ _id: complaint._id }, { status: "ASSIGNED", $push: { assignedTo: { _id: sp_2._id } } }).exec((err, result) => {
                                                                                         if (err) res.send("COMPLAINT IS FILED SUCCESSFULLY BUT NOT ABLE TO ASSIGN TO THE SERVICEPROVIDER!");
                                                                                         else res.send("COMPLAINT IS FILED SUCCESSFULLY AND SUCCESSFULLY ASSIGEND TO THE SERVICEPROVIDER!");
                                                                                     });
