@@ -16,12 +16,12 @@ const mongoose = require('mongoose');
 //     }
 // }
 
-exports.getAllComplaints = async(req, res) => {
+exports.getAllComplaints = (req, res) => {
     try {
-        const status = req.params.status;
-        await Complaint.find({ status: status }, (err, complaints) => {
+        const id = mongoose.Types.ObjectId(req.params.id);
+        Complaint.find({ user_id: id }).exec((err, complaints) => {
             if (err) res.send("NOT ABLE TO GET COMPLAINT LIST!");
-            else if (complaints == null) res.send("NOT ABLE TO FIND COMPLAINTS WITH STATUS: " + status);
+            else if (complaints == null) res.send("NOT ABLE TO FIND COMPLAINTS");
             else res.send(complaints);
         });
     } catch (err) {
