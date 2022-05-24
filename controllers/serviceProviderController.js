@@ -4,10 +4,16 @@ const mongoose = require('mongoose');
 
 exports.getAssignedComplaints = (req, res) => {
     try {
-        const sp_id = req.params.id;
-        SP.find({ _id: sp_id }).select('assignedComplaints').exec((err, assignedComplaints) => {
+        const sp_id = mongoose.Types.ObjectId(req.params.id);
+        SP.find({ _id: sp_id }).select('assignedComplaints').exec((err, result) => {
             if (err) res.send("NOT ABLE TO GET THE ASSIGNED COMPLAINTS!");
-            else res.send(assignedComplaints);
+            else {
+                const complaint_ids = result[0].assignedComplaints;
+                Complaint.find({ _id: { "$in": complaint_ids } }).exec((err, result) => {
+                    if (err) res.send("NOT ABLE TO FIND ANY COMPLAINT!");
+                    else res.send(result);
+                })
+            }
         });
 
     } catch (err) {
