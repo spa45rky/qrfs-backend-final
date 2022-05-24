@@ -25,8 +25,11 @@ const complaintSchema = mongoose.Schema({
         required: true
     },
     category: {
-        type: String,
-        required: true
+        // type: String,
+        // required: true
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+        }
     },
     workUpdate: {
         type: String

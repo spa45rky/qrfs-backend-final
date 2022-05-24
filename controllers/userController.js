@@ -44,7 +44,7 @@ exports.fileNewComplaint = (req, res) => {
             description: description,
             user_id: user_id,
             company_id: company_id,
-            category: category.title,
+            category: category.id,
             status: status,
             dateCreated: date_created,
             workUpdate: "IN PROGRESS",
