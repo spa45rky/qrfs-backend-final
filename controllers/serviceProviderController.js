@@ -56,27 +56,32 @@ exports.resolveComplaint = async(req, res) => {
     }
 }
 
-exports.transferComplaint = async(req, res) => {
+exports.transferComplaint = (req, res) => {
     try {
-        const sp_id = req.params.sp_id;
-        const c_id = req.params.c_id;
-        const t_id = req.params.t_id;
-        const query = { _id: sp_id, assignedComplaints: { c_id: c_id } };
-        SP.findOneAndDelete(query, async(err, result) => {
-            if (err) res.send("SA ISN'T ABLE TO DELETE THE COMPLAINT!");
-            else if (result == null) res.send("COMPLAINT DOES NOT EXIST!");
+        const complaint_id = mongoose.Types.ObjectId(req.params.id);
+        const sp_1 = mongoose.Types.ObjectId(req.body.id_1);
+        const sp_2 = mongoose.Types.ObjectId(req.body.id_2);
+        SP.findOne({ _id: sp_2 }).exec((err, sp) => {
+            if (err) res.send("NOT ABLE TO FIND THE SERVICEPROVIDER!");
+            else if (sp == null) res.send("SP_2 DOES NOT EXIST! NOT ABLE TO TRANSFER THE COMPLAINT!");
             else {
-                await SP.findOneAndUpdate({ _id: t_id }, { assignedComplaints: { c_id: result.c_id } },
-                    async(err, complaint) => {
-                        if (err)
-                            if (err) res.send("SA ISN'T ABLE TO TRANSFER THE COMPLAINT!");
+                SP.updateOne({ _id: sp_1 }, { $pull: { assignedComplaints: { _id: complaint_id } } }).exec((err, sp) => {
+                    if (err) res.send("NOT ABLE TO UPDATE THE SP_1!");
+                    else {
+                        SP.updateOne({ _id: sp_2 }, { $push: { assignedComplaints: { _id: complaint_id } } }).exec((err, sp) => {
+                            if (err) res.send("NOT ABLE TO UPDATE THE SP_2!");
                             else {
-                                await Complaint.create(complaint, (err, db_res) => {
-                                    if (err) res.send("SA ISN'T ABLE TO TRANSFER THE COMPLAINT!");
+                                Complaint.updateOne({ _id: complaint_id }, {
+                                    $pull: { assignedTo: { _id: sp_1 } },
+                                    $push: { assignedTo: { _id: sp_2 } }
+                                }).exec((err, result) => {
+                                    if (err) res.send("NOT ABLE TO TRANSFER THE COMPLAINT!");
                                     else res.send("COMPLAINT IS SUCCESSFULLY TRANSFERRED!");
                                 });
                             }
-                    });
+                        });
+                    }
+                });
             }
         });
     } catch (err) {
