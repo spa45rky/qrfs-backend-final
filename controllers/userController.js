@@ -30,6 +30,9 @@ exports.getAllComplaints = (req, res) => {
 }
 
 exports.fileNewComplaint = (req, res) => {
+
+    // REMODEL USING QUERY ORDERING (!IMPORTANT)
+
     try {
         const title = req.body.title;
         const description = req.body.description;
@@ -68,6 +71,7 @@ exports.fileNewComplaint = (req, res) => {
                     } else {
                         const employees = department.employees;
                         if (employees.length != 0) {
+                            // add sort here
                             SP.find({ department: department._id }).exec((err, sps) => {
                                 if (err) res.send("NOT ABLE TO FIND THE SERVICEPROVIDERS!");
                                 else {
