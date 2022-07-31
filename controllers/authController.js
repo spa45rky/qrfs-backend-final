@@ -25,7 +25,7 @@ exports.register = async(req, res) => {
                         res.send("NOT ABLE TO ADD THE USER!");
                     }
                     let successObject = {
-                        token: jwt.sign({ _id: user._id }, process.env.JWTSECRET, { expiresIn: '3m' }),
+                        token: jwt.sign({ _id: user._id }, process.env.JWTSECRET, { expiresIn: '60m' }),
                         user
                     }
                     res.json(successObject)
